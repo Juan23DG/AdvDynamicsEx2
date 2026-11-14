@@ -460,11 +460,11 @@ h1, h2, h3, h4 {
    SLIDE-OVER PROBLEM BANK EXPLORER DRAWER (Handles 100+ Problems Cleanly)
    ============================================================================ */
 .explorer-backdrop {
-  position: fixed;
+  position: fixed !important;
   inset: 0;
   background: rgba(15, 23, 42, 0.48);
   backdrop-filter: blur(2px);
-  z-index: 340;
+  z-index: 999;
   display: none;
 }
 
@@ -473,26 +473,32 @@ h1, h2, h3, h4 {
 }
 
 .problem-explorer-aside {
-  position: fixed;
+  position: fixed !important;
   top: 0;
   left: 0;
   bottom: 0;
-  width: min(370px, 90vw);
+  width: min(380px, 92vw);
+  max-width: 100vw;
+  height: 100vh;
   background: var(--bg-surface);
   border-right: 2px solid var(--border-strong);
   border-top: 4px solid var(--indigo);
   padding: 1.1rem 1rem;
-  z-index: 350;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   box-shadow: var(--shadow-lg);
-  transform: translateX(-104%);
-  transition: transform 0.22s ease;
+  transform: translateX(-110%);
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.24s;
 }
 
 .problem-explorer-aside.open {
-  transform: translateX(0);
+  transform: translateX(0) !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 .explorer-search-input {

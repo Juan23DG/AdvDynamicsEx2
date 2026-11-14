@@ -16,8 +16,8 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 
   <!-- Application Design System Styles (flat root with subfolder fallback) -->
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="styles.css?v=2.2" />
+  <link rel="stylesheet" href="css/styles.css?v=2.2" />
 </head>
 <body>
 
@@ -306,46 +306,6 @@
       <!-- Sticky Collapsible Quick-Peek Problem Drawer for Tablet Portrait & Mobile Phones (< 960px) -->
       <div class="mobile-problem-peek-drawer" id="mobile-problem-peek-drawer" aria-label="Pinned Problem Reference"></div>
 
-      <!-- Slide-Over Problem Bank Explorer Backdrop & Drawer (Scales to 100+ Problems Without Displacing Layout) -->
-      <div class="explorer-backdrop" id="explorer-backdrop" onclick="window.STUDIO.toggleProblemExplorer(false)"></div>
-      <aside class="problem-explorer-aside" id="problem-explorer-aside" aria-label="Searchable Problem Bank">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <strong style="font-size:0.84rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--indigo);">
-            📚 Problem Bank Explorer
-          </strong>
-          <button type="button"
-                  class="btn"
-                  style="padding:0.2rem 0.55rem; font-size:0.75rem;"
-                  onclick="window.STUDIO.toggleProblemExplorer(false)"
-                  title="Close Problem Bank Drawer">
-            ✕ Close
-          </button>
-        </div>
-
-        <input type="search"
-               id="problem-search-input"
-               class="explorer-search-input"
-               placeholder="🔍 Search topic, pulley, DAE..."
-               oninput="window.STUDIO.onProblemSearchInput(this.value)" />
-
-        <div class="explorer-filter-row">
-          <button type="button" class="filter-pill active" data-filter="all" onclick="window.STUDIO.setProblemFilter('all')">
-            All (16)
-          </button>
-          <button type="button" class="filter-pill" data-filter="hw2" onclick="window.STUDIO.setProblemFilter('hw2')">
-            HW 2 (3)
-          </button>
-          <button type="button" class="filter-pill" data-filter="new" onclick="window.STUDIO.setProblemFilter('new')">
-            Practice (3)
-          </button>
-          <button type="button" class="filter-pill" data-filter="example" onclick="window.STUDIO.setProblemFilter('example')">
-            Examples (10)
-          </button>
-        </div>
-
-        <!-- Grouped Problem List -->
-        <div class="problem-list-scroll" id="problem-pills-strip"></div>
-      </aside>
 
       <!-- Dedicated 2-Column Side-by-Side Studio Workspace (Left Context Follows Scroll + Right Step Timeline) -->
       <div class="studio-workspace" id="studio-workspace">
@@ -485,17 +445,60 @@
     <canvas id="scratchpad-canvas" class="scratchpad-canvas"></canvas>
   </aside>
 
+  <!-- ========================================================================
+       GLOBAL SLIDE-OVER PROBLEM BANK EXPLORER DRAWER (ANCHORED TO BODY)
+  ========================================================================= -->
+  <div class="explorer-backdrop" id="explorer-backdrop" onclick="window.STUDIO.toggleProblemExplorer(false)"></div>
+  <aside class="problem-explorer-aside" id="problem-explorer-aside" aria-label="Searchable Problem Bank">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <strong style="font-size:0.84rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--indigo);">
+        📚 Problem Bank Explorer
+      </strong>
+      <button type="button"
+              class="btn"
+              style="padding:0.2rem 0.55rem; font-size:0.75rem;"
+              onclick="window.STUDIO.toggleProblemExplorer(false)"
+              title="Close Problem Bank Drawer">
+        ✕ Close
+      </button>
+    </div>
+
+    <input type="search"
+           id="problem-search-input"
+           class="explorer-search-input"
+           placeholder="🔍 Search topic, pulley, DAE..."
+           oninput="window.STUDIO.onProblemSearchInput(this.value)" />
+
+    <div class="explorer-filter-row">
+      <button type="button" class="filter-pill active" data-filter="all" onclick="window.STUDIO.setProblemFilter('all')">
+        All (16)
+      </button>
+      <button type="button" class="filter-pill" data-filter="hw2" onclick="window.STUDIO.setProblemFilter('hw2')">
+        HW 2 (3)
+      </button>
+      <button type="button" class="filter-pill" data-filter="new" onclick="window.STUDIO.setProblemFilter('new')">
+        Practice (3)
+      </button>
+      <button type="button" class="filter-pill" data-filter="example" onclick="window.STUDIO.setProblemFilter('example')">
+        Examples (10)
+      </button>
+    </div>
+
+    <!-- Grouped Problem List -->
+    <div class="problem-list-scroll" id="problem-pills-strip"></div>
+  </aside>
+
   <!-- Core Data Store & Controller (flat root with subfolder fallback) -->
-  <script src="exam2_data.js"></script>
+  <script src="exam2_data.js?v=2.2"></script>
   <script>
     if (!window.EXAM2_DATA) {
-      document.write('<script src="data/exam2_data.js"><\/script>');
+      document.write('<script src="data/exam2_data.js?v=2.2"><\/script>');
     }
   </script>
-  <script src="app.js"></script>
+  <script src="app.js?v=2.2"></script>
   <script>
     if (!window.STUDIO) {
-      document.write('<script src="js/app.js"><\/script>');
+      document.write('<script src="js/app.js?v=2.2"><\/script>');
     }
   </script>
 </body>
