@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Operating System & Cache Files
+.DS_Store
+Thumbs.db
+*.log
+
+# System Generated & Scratch Files
+.system_generated/
+scratch/

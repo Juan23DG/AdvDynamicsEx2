@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EGM 5444 / EML 4930 • Advanced Dynamics Exam 2 Interactive Study Studio</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- KaTeX 0.16.9 for Fast, Crisp LaTeX Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+  <!-- Application Design System Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ========================================================================
+       STICKY TOP HEADER & GLOBAL CONTROLS
+  ========================================================================= -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-cluster">
+        <div class="brand-logo" aria-hidden="true">ℒ</div>
+        <div class="brand-titles">
+          <h1>Advanced Dynamics — Exam 2 Study Studio</h1>
+          <div class="brand-subtitle">
+            EGM 5444 / EML 4930 • Lectures 10–22 • Lagrangian Mechanics, Constraints &amp; Impacts
+          </div>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <!-- Global Step Mastery Progress Pill -->
+        <div class="progress-summary-pill" title="Overall Guided Step Completion">
+          <span>Mastery:</span>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="header-progress-fill" style="width: 0%;"></div>
+          </div>
+          <span id="header-progress-text">0/68 Steps (0%)</span>
+        </div>
+
+        <!-- Interactive Scratchpad Toggle -->
+        <button type="button" class="btn" id="scratchpad-toggle-btn" onclick="window.STUDIO.toggleScratchpad()">
+          ✏️ Scratchpad
+        </button>
+
+        <!-- Light / Dark Theme Toggle -->
+        <button type="button" class="btn" id="theme-toggle-btn" onclick="window.STUDIO.toggleTheme()">
+          🌙 Dark
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs & Guided / Self-Check / Study Mode Switcher -->
+    <nav class="main-nav-bar" aria-label="Primary Study Sections">
+      <div class="main-nav-inner">
+        <div class="nav-tabs">
+          <button type="button"
+                  class="nav-tab-btn active"
+                  data-tab="tab-welcome"
+                  id="nav-btn-welcome"
+                  onclick="window.STUDIO.switchTab('tab-welcome')">
+            🏠 Welcome &amp; Study Guide
+          </button>
+          <button type="button"
+                  class="nav-tab-btn"
+                  data-tab="tab-tutor"
+                  id="nav-btn-tutor"
+                  onclick="window.STUDIO.switchTab('tab-tutor')">
+            🧭 Guided Problem Solver <span class="badge badge-indigo">16 Problems</span>
+          </button>
+          <button type="button"
+                  class="nav-tab-btn"
+                  data-tab="tab-concepts"
+                  id="nav-btn-concepts"
+                  onclick="window.STUDIO.switchTab('tab-concepts')">
+            📚 Concept &amp; Lecture Hub <span class="badge badge-teal">Lec 10–22 + Links</span>
+          </button>
+          <button type="button"
+                  class="nav-tab-btn"
+                  data-tab="tab-formulas"
+                  id="nav-btn-formulas"
+                  onclick="window.STUDIO.switchTab('tab-formulas')">
+            📐 Exam 2 Formula &amp; Recipe Sheet <span class="badge badge-amber">PDF + MD</span>
+          </button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:0.55rem;">
+          <span style="font-size:0.74rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Mode:</span>
+          <div class="mode-switch-group" role="group" aria-label="Problem Solving Mode">
+            <button type="button"
+                    class="mode-switch-btn active"
+                    id="mode-btn-guided"
+                    onclick="window.STUDIO.setStudyMode(false)"
+                    title="Step-by-step hints, physical intuition, concept links, and self-check checkpoints">
+              🎯 Guided Tutor
+            </button>
+            <button type="button"
+                    class="mode-switch-btn"
+                    id="mode-btn-selfcheck"
+                    onclick="window.STUDIO.setSelfCheckMode(true)"
+                    title="Exam simulation: solve broken-down steps with ONLY the Self-Check questions (no hints, intuition, or help)">
+              ⚡ Self-Check Only
+            </button>
+            <button type="button"
+                    class="mode-switch-btn"
+                    id="mode-btn-study"
+                    onclick="window.STUDIO.setStudyMode(true)"
+                    title="Expand all hints, derivations, and final answers at once for fast review">
+              📖 Full Read-Through
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========================================================================
+       MAIN APPLICATION SHELL
+  ========================================================================= -->
+  <main class="app-main">
+
+    <!-- ======================================================================
+         TAB 0: WELCOME & INTERACTIVE STUDY GUIDE
+    ======================================================================= -->
+    <section id="tab-welcome" class="tab-panel active" aria-label="Welcome and Study Guide">
+      <div class="tab-hero-banner tab-hero-welcome">
+        <div style="max-width: 780px;">
+          <span class="badge" style="background:rgba(255,255,255,0.22); color:#fff;">Welcome • EGM 5444 / EML 4930 • Exam 2 Prep</span>
+          <h2 style="font-size:1.55rem; font-weight:800; color:#fff; margin-top:0.35rem; line-height:1.25;">
+            Welcome to the Advanced Dynamics Exam 2 Study Studio
+          </h2>
+          <p style="font-size:0.94rem; color:rgba(255,255,255,0.92); margin-top:0.4rem; line-height:1.6;">
+            Designed to guide you step-by-step through the exact hand-derivation skills tested on <strong>Exam 2 (Lectures 10–22)</strong>: Lagrangian Mechanics ($\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}}=\mathbf{f}$), Holonomic Constraints ($g(\mathbf{q})=0$), Constraint Jacobians ($\mathbf{J}=\partial g/\partial\mathbf{q}$), Lagrange Multipliers ($\lambda$), and Contact/Impact Maps ($\Lambda$).
+          </p>
+          <div style="display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:1rem;">
+            <button type="button"
+                    class="btn"
+                    style="background:#ffffff; color:#1e3a8a; border:none; font-weight:800; padding:0.55rem 1rem;"
+                    onclick="window.STUDIO.switchTab('tab-tutor')">
+              🧭 Launch Guided Problem Solver (16 Problems) →
+            </button>
+            <button type="button"
+                    class="btn"
+                    style="background:rgba(255,255,255,0.16); color:#ffffff; border:1px solid rgba(255,255,255,0.35); padding:0.55rem 0.95rem;"
+                    onclick="window.STUDIO.switchTab('tab-concepts')">
+              📚 Explore Visual Concept &amp; Lecture Hub
+            </button>
+            <a href="Exam_2_Formula_Sheet.pdf"
+               target="_blank"
+               download="Exam_2_Formula_Sheet.pdf"
+               class="btn"
+               style="background:rgba(16,185,129,0.25); color:#ffffff; border:1px solid rgba(255,255,255,0.4); padding:0.55rem 0.95rem;">
+              📄 Download Formula Sheet PDF
+            </a>
+            <a href="Exam_2_Formula_Sheet.md"
+               target="_blank"
+               class="btn"
+               style="background:rgba(255,255,255,0.12); color:#ffffff; border:1px solid rgba(255,255,255,0.3); padding:0.55rem 0.9rem;">
+              📝 View Formula Sheet (.md)
+            </a>
+          </div>
+        </div>
+
+        <div class="welcome-stats-card">
+          <div class="welcome-stat-item">
+            <span class="welcome-stat-num">16</span>
+            <span class="welcome-stat-label">Guided Multi-Step Problems<br/><small>(3 HW 2 + 3 Practice + 10 Example Exam)</small></span>
+          </div>
+          <div class="welcome-stat-item">
+            <span class="welcome-stat-num">68</span>
+            <span class="welcome-stat-label">Interactive Checkpoints<br/><small>(Randomized A/B/C/D + Self-Check Mode)</small></span>
+          </div>
+          <div class="welcome-stat-item">
+            <span class="welcome-stat-num">10</span>
+            <span class="welcome-stat-label">Visual Concept Guides<br/><small>(Custom SVGs + Verified Textbooks)</small></span>
+          </div>
+          <div class="welcome-stat-item">
+            <span class="welcome-stat-num">12</span>
+            <span class="welcome-stat-label">F2F Lecture Recordings<br/><small>(Lectures 10–22 Direct Video Links)</small></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- How to Use This Site (4-Step Visual Walkthrough) -->
+      <div class="surface-card" style="margin-bottom:1.35rem; border-top:4px solid var(--primary);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.9rem;">
+          <div>
+            <span class="badge badge-indigo">Quick-Start Guide</span>
+            <h3 style="font-size:1.22rem; font-weight:800; margin-top:0.25rem;">
+              How to Use This Site to Study Effectively
+            </h3>
+          </div>
+          <span style="font-size:0.82rem; color:var(--text-muted); font-weight:600;">
+            💡 Your step progress &amp; theme are saved automatically in your browser
+          </span>
+        </div>
+
+        <div class="welcome-howto-grid">
+          <div class="welcome-step-card">
+            <div class="welcome-step-badge" style="background:var(--primary);">1</div>
+            <h4>Choose Guided, Self-Check Only, or Read-Through Mode</h4>
+            <p>
+              Use <strong>🎯 Guided Tutor</strong> for step-by-step hints &amp; intuition, switch to <strong>⚡ Self-Check Only</strong> to solve broken-down steps with <em>no hints or help</em> (pure self-checks), or use <strong>📖 Full Read-Through</strong> to expand all derivations at once.
+            </p>
+          </div>
+
+          <div class="welcome-step-card">
+            <div class="welcome-step-badge" style="background:var(--purple);">2</div>
+            <h4>Follow the Sticky Problem &amp; Color Timeline</h4>
+            <p>
+              As you scroll down through a multi-step derivation, the <strong>Problem Statement, SVG Diagram, and Parameters follow your scroll</strong> on the left (or via <strong>📌 Peek Problem</strong> on tablet/mobile). Each step is color-coded so you always see where a new step begins.
+            </p>
+          </div>
+
+          <div class="welcome-step-card">
+            <div class="welcome-step-badge" style="background:var(--teal);">3</div>
+            <h4>Unlock Progressive Hints &amp; Textbook Links</h4>
+            <p>
+              Every step includes a <strong>Step Goal</strong>, <strong>Physical Intuition</strong>, <strong>💡 Hint 1 (Setup &amp; Strategy)</strong>, and <strong>🧮 Hint 2 (Key Math &amp; Chain-Rule Check)</strong>, plus clickable <strong>Concept Chips</strong> and verified links to LibreTexts, MIT OCW, CMU, and FSU lecture videos.
+            </p>
+          </div>
+
+          <div class="welcome-step-card">
+            <div class="welcome-step-badge" style="background:var(--emerald);">4</div>
+            <h4>Test Yourself on Randomized Checkpoints</h4>
+            <p>
+              Each step has a 4-option (<code>A</code>, <code>B</code>, <code>C</code>, <code>D</code>) checkpoint with <strong>randomized answer positions</strong>. Selecting a distractor reveals a targeted <strong>Diagnostic Hint</strong> explaining the exact sign error or missing term (e.g., forgetting $\dot{\mathbf{J}}\dot{\mathbf{q}}$ or $2\dot{\mathbf{r}}_{\text{cart}}\cdot\dot{\mathbf{r}}_{\text{rel}}$).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- What's Offered: 3 Core Exam 2 Topics & Direct Problem Quick-Launch -->
+      <div class="surface-card" style="border-top:4px solid var(--teal);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.9rem;">
+          <div>
+            <span class="badge badge-teal">What Is Offered • Direct Problem Launch</span>
+            <h3 style="font-size:1.22rem; font-weight:800; margin-top:0.25rem;">
+              Exam 2 Topic Modules &amp; Interactive Problem Bank
+            </h3>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <a href="Exam_2_Formula_Sheet.pdf" target="_blank" download="Exam_2_Formula_Sheet.pdf" class="btn btn-primary">
+              📄 Download Standalone Formula Sheet PDF
+            </a>
+            <button type="button" class="btn" onclick="window.STUDIO.switchTab('tab-formulas')">
+              📐 Open Interactive Formula Sheet Tab
+            </button>
+          </div>
+        </div>
+
+        <div class="hub-grid" id="welcome-modules-grid"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 1: GUIDED PROBLEM SOLVER (SCALABLE EXPLORER + COLOR-CODED TIMELINE)
+    ======================================================================= -->
+    <section id="tab-tutor" class="tab-panel" aria-label="Guided Problem Solver">
+
+      <!-- Compact Scalable Problem Switcher Bar -->
+      <div class="problem-switcher-toolbar" id="problem-switcher-toolbar">
+        <div class="switcher-left">
+          <button type="button"
+                  class="btn btn-primary"
+                  id="toggle-explorer-btn"
+                  onclick="window.STUDIO.toggleProblemExplorer()"
+                  title="Open the searchable Problem Bank drawer">
+            📂 Problem Bank (16)
+          </button>
+          <button type="button"
+                  class="btn mobile-peek-btn"
+                  id="mobile-peek-btn"
+                  onclick="window.STUDIO.toggleMobileProblemPeek()"
+                  title="Pin or peek at the Problem Statement & Diagram while scrolling on tablet/phone">
+            📌 Peek Problem
+          </button>
+          <div class="switcher-current-info" id="active-problem-banner-info"></div>
+        </div>
+
+        <div class="switcher-right">
+          <button type="button"
+                  class="btn"
+                  id="focus-mode-btn"
+                  onclick="window.STUDIO.toggleStepFocusMode()"
+                  title="Collapse inactive steps so you can focus on one step at a time, or expand all steps">
+            🎯 Focus Active Step
+          </button>
+          <button type="button" class="btn" onclick="window.STUDIO.stepAdjacentProblem(-1)" title="Previous Problem">
+            ◀ Prev
+          </button>
+          <button type="button" class="btn" onclick="window.STUDIO.stepAdjacentProblem(1)" title="Next Problem">
+            Next ▶
+          </button>
+        </div>
+      </div>
+
+      <!-- Sticky Collapsible Quick-Peek Problem Drawer for Tablet Portrait & Mobile Phones (< 960px) -->
+      <div class="mobile-problem-peek-drawer" id="mobile-problem-peek-drawer" aria-label="Pinned Problem Reference"></div>
+
+      <!-- Slide-Over Problem Bank Explorer Backdrop & Drawer (Scales to 100+ Problems Without Displacing Layout) -->
+      <div class="explorer-backdrop" id="explorer-backdrop" onclick="window.STUDIO.toggleProblemExplorer(false)"></div>
+      <aside class="problem-explorer-aside" id="problem-explorer-aside" aria-label="Searchable Problem Bank">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong style="font-size:0.84rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--indigo);">
+            📚 Problem Bank Explorer
+          </strong>
+          <button type="button"
+                  class="btn"
+                  style="padding:0.2rem 0.55rem; font-size:0.75rem;"
+                  onclick="window.STUDIO.toggleProblemExplorer(false)"
+                  title="Close Problem Bank Drawer">
+            ✕ Close
+          </button>
+        </div>
+
+        <input type="search"
+               id="problem-search-input"
+               class="explorer-search-input"
+               placeholder="🔍 Search topic, pulley, DAE..."
+               oninput="window.STUDIO.onProblemSearchInput(this.value)" />
+
+        <div class="explorer-filter-row">
+          <button type="button" class="filter-pill active" data-filter="all" onclick="window.STUDIO.setProblemFilter('all')">
+            All (16)
+          </button>
+          <button type="button" class="filter-pill" data-filter="hw2" onclick="window.STUDIO.setProblemFilter('hw2')">
+            HW 2 (3)
+          </button>
+          <button type="button" class="filter-pill" data-filter="new" onclick="window.STUDIO.setProblemFilter('new')">
+            Practice (3)
+          </button>
+          <button type="button" class="filter-pill" data-filter="example" onclick="window.STUDIO.setProblemFilter('example')">
+            Examples (10)
+          </button>
+        </div>
+
+        <!-- Grouped Problem List -->
+        <div class="problem-list-scroll" id="problem-pills-strip"></div>
+      </aside>
+
+      <!-- Dedicated 2-Column Side-by-Side Studio Workspace (Left Context Follows Scroll + Right Step Timeline) -->
+      <div class="studio-workspace" id="studio-workspace">
+        <!-- Col 1: Sticky Problem Diagram, Prompt, Parameters & Stepper Roadmap -->
+        <aside class="context-column" id="tutor-context-column" aria-label="Problem Context and Roadmap"></aside>
+
+        <!-- Col 2: Numbered Color-Coded Step Timeline & Boxed Final Answer -->
+        <div class="steps-column" id="tutor-steps-column" aria-label="Step-by-Step Guided Derivation"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 2: CONCEPT & LECTURE HUB (LECTURES 10–22 + VERIFIED EXTERNAL LINKS)
+    ======================================================================= -->
+    <section id="tab-concepts" class="tab-panel" aria-label="Concept Encyclopedia and Lecture Links">
+      <div class="tab-hero-banner tab-hero-concepts">
+        <div>
+          <span class="badge" style="background:rgba(255,255,255,0.2); color:#fff;">Interactive Concept Encyclopedia</span>
+          <h2 style="font-size:1.4rem; font-weight:800; color:#fff; margin-top:0.3rem;">
+            Core Exam 2 Concepts &amp; Verified Further Reading Directory
+          </h2>
+          <p style="font-size:0.9rem; color:rgba(255,255,255,0.9); margin-top:0.2rem; max-width:780px;">
+            Every concept below links directly to its FSU course lecture recording (Lectures 10–22) and verified external textbooks (Physics LibreTexts Ch. 6, MIT OCW, CMU Constrained Dynamics, Modern Robotics).
+          </p>
+        </div>
+        <div style="min-width:260px; flex:1; max-width:360px;">
+          <input type="search"
+                 id="concept-search-input"
+                 placeholder="🔍 Search concepts (e.g. Jacobian, Baumgarte, Impact)..."
+                 oninput="window.STUDIO.onConceptSearchInput(this.value)"
+                 style="width:100%; padding:0.6rem 0.9rem; border-radius:var(--radius-sm); border:none; background:#ffffff; color:#0f172a; font-size:0.86rem; font-weight:500;" />
+        </div>
+      </div>
+
+      <div style="display:flex; gap:0.45rem; flex-wrap:wrap; margin-bottom:1.15rem;">
+        <button type="button" class="filter-pill concept-cat-pill active" data-cat="all" onclick="window.STUDIO.filterConcepts('all')">
+          All Categories (10)
+        </button>
+        <button type="button" class="filter-pill concept-cat-pill" data-cat="Lagrangian Mechanics" onclick="window.STUDIO.filterConcepts('Lagrangian Mechanics')">
+          📐 Lagrangian Mechanics
+        </button>
+        <button type="button" class="filter-pill concept-cat-pill" data-cat="Constrained Systems" onclick="window.STUDIO.filterConcepts('Constrained Systems')">
+          ⚙️ Holonomic Constraints, Jacobians &amp; Multipliers
+        </button>
+        <button type="button" class="filter-pill concept-cat-pill" data-cat="Contact & Impacts" onclick="window.STUDIO.filterConcepts('Contact & Impacts')">
+          ⚡ Contact, Impacts &amp; Hybrid Systems
+        </button>
+      </div>
+
+      <!-- Concept Cards Grid -->
+      <div class="hub-grid" id="concepts-library-grid" style="margin-bottom:2rem;"></div>
+
+      <!-- Course Lectures 10–22 Video Roadmap -->
+      <div class="surface-card" style="margin-bottom:1rem; border-left:5px solid var(--purple);">
+        <span class="badge badge-purple">Course Schedule &amp; Video Archive</span>
+        <h2 style="font-size:1.3rem; font-weight:800; margin-top:0.3rem;">
+          Lectures 10–22 Video Recordings (Sep 28 – Nov 9)
+        </h2>
+        <p style="font-size:0.88rem; color:var(--text-secondary); margin-top:0.2rem;">
+          Direct links to all F2F lecture recordings covered on Exam 2, tagged with exam weight and key derivation topics.
+        </p>
+      </div>
+      <div class="hub-grid" id="lectures-roadmap-grid"></div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 3: EXAM 2 FORMULA & HAND-DERIVATION RECIPE SHEET
+    ======================================================================= -->
+    <section id="tab-formulas" class="tab-panel" aria-label="Exam 2 Formula and Recipe Sheet">
+      <div class="tab-hero-banner tab-hero-formulas">
+        <div>
+          <span class="badge" style="background:rgba(255,255,255,0.2); color:#fff;">Engineering Reference Blueprint • Standalone PDF &amp; Markdown</span>
+          <h2 style="font-size:1.4rem; font-weight:800; color:#fff; margin-top:0.3rem;">
+            Exam 2 Master Equations &amp; Step-by-Step Derivation Recipes
+          </h2>
+          <p style="font-size:0.9rem; color:rgba(255,255,255,0.9); margin-top:0.2rem; max-width:780px;">
+            Organized into the three core Exam 2 problem archetypes: (1) Minimal-Coordinate Euler-Lagrange, (2) Constrained DAE &amp; Lagrange Multipliers, and (3) Impulsive Contact &amp; Plastic Impact Maps. Compiled into a dedicated 2-page typeset PDF and Markdown reference sheet.
+          </p>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:0.55rem; align-items:center;">
+          <a href="Exam_2_Formula_Sheet.pdf"
+             target="_blank"
+             download="Exam_2_Formula_Sheet.pdf"
+             class="btn"
+             id="download-formula-pdf-btn"
+             style="background:#ffffff; color:#0f172a; border:none; font-weight:800; padding:0.55rem 0.95rem;">
+            📄 Download Formula Sheet PDF
+          </a>
+          <a href="Exam_2_Formula_Sheet.md"
+             target="_blank"
+             class="btn"
+             id="view-formula-md-btn"
+             style="background:rgba(255,255,255,0.18); color:#ffffff; border:1px solid rgba(255,255,255,0.45); padding:0.55rem 0.9rem;">
+            📝 Open Markdown (.md)
+          </a>
+        </div>
+      </div>
+
+      <div id="formula-recipes-container"></div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       CONCEPT QUICK-PREVIEW MODAL (OPENS FROM ANY STEP CHIP)
+  ========================================================================= -->
+  <div class="modal-backdrop" id="concept-modal-backdrop" onclick="if(event.target === this) window.STUDIO.closeConceptModal()">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="concept-modal-title">
+      <div class="modal-header">
+        <h3 id="concept-modal-title" style="font-size:1.15rem; font-weight:800;">Concept Details</h3>
+        <button type="button" class="btn" style="padding:0.25rem 0.6rem;" onclick="window.STUDIO.closeConceptModal()">
+          ✕ Close
+        </button>
+      </div>
+      <div class="modal-body" id="concept-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       SLIDE-OVER MATH & FBD SCRATCHPAD DOCK
+  ========================================================================= -->
+  <aside class="scratchpad-dock" id="scratchpad-dock" aria-label="Interactive Drawing Scratchpad">
+    <div class="scratchpad-header">
+      <strong>✏️ Quick FBD &amp; Chain-Rule Scratchpad</strong>
+      <div style="display:flex; gap:0.35rem;">
+        <button type="button" class="btn" style="padding:0.2rem 0.5rem; font-size:0.74rem;" onclick="window.STUDIO.clearScratchpad()">
+          🗑️ Clear
+        </button>
+        <button type="button" class="btn" style="padding:0.2rem 0.5rem; font-size:0.74rem;" onclick="window.STUDIO.toggleExpandScratchpad()">
+          ⤢ Resize
+        </button>
+        <button type="button" class="btn" style="padding:0.2rem 0.5rem; font-size:0.74rem;" onclick="window.STUDIO.toggleScratchpad()">
+          ✕
+        </button>
+      </div>
+    </div>
+    <canvas id="scratchpad-canvas" class="scratchpad-canvas"></canvas>
+  </aside>
+
+  <!-- Data & Controller Scripts -->
+  <script src="data/exam2_data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

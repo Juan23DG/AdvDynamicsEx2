@@ -1,0 +1,51 @@
+# ============================================================================
+# Netlify Configuration File: EGM 5444 / EML 4930 Exam 2 Study Studio
+# ============================================================================
+
+[build]
+  # Directory containing the static site assets (index.html, css, js, data)
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Global security headers for all routes
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Standalone Exam 2 Formula Sheet PDF headers
+[[headers]]
+  for = "/Exam_2_Formula_Sheet.pdf"
+  [headers.values]
+    Content-Type = "application/pdf"
+    Content-Disposition = "inline; filename=\"Exam_2_Formula_Sheet.pdf\""
+    Cache-Control = "public, max-age=86400"
+
+# Standalone Exam 2 Formula Sheet Markdown headers
+[[headers]]
+  for = "/Exam_2_Formula_Sheet.md"
+  [headers.values]
+    Content-Type = "text/markdown; charset=utf-8"
+    Cache-Control = "public, max-age=86400"
+
+# Long-term caching for static style sheets and scripts
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

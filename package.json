@@ -1,0 +1,23 @@
+{
+  "name": "advanced-dynamics-exam2-study-studio",
+  "version": "1.0.0",
+  "description": "Interactive Guided Study Studio for EGM 5444 / EML 4930 Advanced Dynamics Exam 2 (Lagrangian Mechanics, Constraints & Impacts)",
+  "main": "index.html",
+  "scripts": {
+    "test": "node tests/test_suite.js && node tests/test_ui_e2e.js",
+    "test:viewports": "node tests/test_responsive_viewports.js",
+    "build": "node -e \"console.log('Static assets verified and ready for Netlify deployment.')\"",
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "dynamics",
+    "lagrangian-mechanics",
+    "fsu",
+    "engineering",
+    "interactive-tutor",
+    "latex",
+    "katex"
+  ],
+  "author": "Dr. Christian Hubicki / FAMU-FSU College of Engineering",
+  "license": "MIT"
+}
