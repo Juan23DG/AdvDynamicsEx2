@@ -17,14 +17,19 @@
   Content-Type: text/markdown; charset=utf-8
   Cache-Control: public, max-age=86400
 
-# Static CSS
+# Flat Root Static Assets
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+# Subfolder Assets
 /css/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Static JS
 /js/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Static Data
 /data/*
   Cache-Control: public, max-age=31536000, immutable

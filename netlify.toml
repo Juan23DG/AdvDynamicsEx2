@@ -34,7 +34,17 @@
     Content-Type = "text/markdown; charset=utf-8"
     Cache-Control = "public, max-age=86400"
 
-# Long-term caching for static style sheets and scripts
+# Long-term caching for static style sheets and scripts (both flat and subfolder paths)
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 [[headers]]
   for = "/css/*"
   [headers.values]

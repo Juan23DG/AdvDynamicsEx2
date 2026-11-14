@@ -15,7 +15,8 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 
-  <!-- Application Design System Styles -->
+  <!-- Application Design System Styles (flat root with subfolder fallback) -->
+  <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -484,8 +485,18 @@
     <canvas id="scratchpad-canvas" class="scratchpad-canvas"></canvas>
   </aside>
 
-  <!-- Data & Controller Scripts -->
-  <script src="data/exam2_data.js"></script>
-  <script src="js/app.js"></script>
+  <!-- Core Data Store & Controller (flat root with subfolder fallback) -->
+  <script src="exam2_data.js"></script>
+  <script>
+    if (!window.EXAM2_DATA) {
+      document.write('<script src="data/exam2_data.js"><\/script>');
+    }
+  </script>
+  <script src="app.js"></script>
+  <script>
+    if (!window.STUDIO) {
+      document.write('<script src="js/app.js"><\/script>');
+    }
+  </script>
 </body>
 </html>
