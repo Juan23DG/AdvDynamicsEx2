@@ -1711,17 +1711,17 @@ h1, h2, h3, h4 {
     padding-right: 0;
   }
   .problem-switcher-toolbar {
-    position: sticky;
-    top: 98px;
-    z-index: 85;
+    position: static;
+    top: auto;
+    z-index: auto;
   }
   .mobile-peek-btn {
     display: inline-flex;
   }
   .mobile-problem-peek-drawer.open {
-    position: sticky;
-    top: 158px;
-    z-index: 84;
+    position: static;
+    top: auto;
+    z-index: auto;
   }
   .checkpoint-options-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -1760,11 +1760,13 @@ h1, h2, h3, h4 {
     padding: 0.45rem 0.65rem;
   }
   .problem-switcher-toolbar {
-    top: 0;
+    position: static;
+    top: auto;
     padding: 0.55rem 0.75rem;
   }
   .mobile-problem-peek-drawer.open {
-    top: 84px;
+    position: static;
+    top: auto;
   }
   .header-inner,
   .main-nav-inner,
@@ -1829,10 +1831,12 @@ h1, h2, h3, h4 {
     position: relative;
   }
   .problem-switcher-toolbar {
-    top: 0;
+    position: static;
+    top: auto;
   }
   .mobile-problem-peek-drawer.open {
-    top: 56px;
+    position: static;
+    top: auto;
     max-height: 70vh;
   }
 }
