@@ -16,8 +16,8 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 
   <!-- Application Design System Styles (flat root with subfolder fallback) -->
-  <link rel="stylesheet" href="styles.css?v=2.3" />
-  <link rel="stylesheet" href="css/styles.css?v=2.3" />
+  <link rel="stylesheet" href="styles.css?v=2.4" />
+  <link rel="stylesheet" href="css/styles.css?v=2.4" />
 </head>
 <body>
 
@@ -74,7 +74,7 @@
                   data-tab="tab-tutor"
                   id="nav-btn-tutor"
                   onclick="window.STUDIO.switchTab('tab-tutor')">
-            🧭 Guided Problem Solver <span class="badge badge-indigo">16 Problems</span>
+            🧭 Guided Problem Solver <span class="badge badge-indigo">20 Problems</span>
           </button>
           <button type="button"
                   class="nav-tab-btn"
@@ -145,7 +145,7 @@
                     class="btn"
                     style="background:#ffffff; color:#1e3a8a; border:none; font-weight:800; padding:0.55rem 1rem;"
                     onclick="window.STUDIO.switchTab('tab-tutor')">
-              🧭 Launch Guided Problem Solver (16 Problems) →
+              🧭 Launch Guided Problem Solver (20 Problems) →
             </button>
             <button type="button"
                     class="btn"
@@ -171,11 +171,11 @@
 
         <div class="welcome-stats-card">
           <div class="welcome-stat-item">
-            <span class="welcome-stat-num">16</span>
-            <span class="welcome-stat-label">Guided Multi-Step Problems<br/><small>(3 HW 2 + 3 Practice + 10 Example Exam)</small></span>
+            <span class="welcome-stat-num">20</span>
+            <span class="welcome-stat-label">Guided Multi-Step Problems<br/><small>(3 HW 2 + 3 Practice + 10 Example + 4 Practice E)</small></span>
           </div>
           <div class="welcome-stat-item">
-            <span class="welcome-stat-num">68</span>
+            <span class="welcome-stat-num">83</span>
             <span class="welcome-stat-label">Interactive Checkpoints<br/><small>(Randomized A/B/C/D + Self-Check Mode)</small></span>
           </div>
           <div class="welcome-stat-item">
@@ -274,7 +274,7 @@
                   id="toggle-explorer-btn"
                   onclick="window.STUDIO.toggleProblemExplorer()"
                   title="Open the searchable Problem Bank drawer">
-            📂 Problem Bank (16)
+            📂 Problem Bank (20)
           </button>
           <button type="button"
                   class="btn mobile-peek-btn"
@@ -471,7 +471,10 @@
 
     <div class="explorer-filter-row">
       <button type="button" class="filter-pill active" data-filter="all" onclick="window.STUDIO.setProblemFilter('all')">
-        All (16)
+        All (20)
+      </button>
+      <button type="button" class="filter-pill" data-filter="practice-e" onclick="window.STUDIO.setProblemFilter('practice-e')">
+        Exam E (4)
       </button>
       <button type="button" class="filter-pill" data-filter="hw2" onclick="window.STUDIO.setProblemFilter('hw2')">
         HW 2 (3)
@@ -489,16 +492,16 @@
   </aside>
 
   <!-- Core Data Store & Controller (flat root with subfolder fallback) -->
-  <script src="exam2_data.js?v=2.3"></script>
+  <script src="exam2_data.js?v=2.4"></script>
   <script>
     if (!window.EXAM2_DATA) {
-      document.write('<script src="data/exam2_data.js?v=2.3"><\/script>');
+      document.write('<script src="data/exam2_data.js?v=2.4"><\/script>');
     }
   </script>
-  <script src="app.js?v=2.3"></script>
+  <script src="app.js?v=2.4"></script>
   <script>
     if (!window.STUDIO) {
-      document.write('<script src="js/app.js?v=2.3"><\/script>');
+      document.write('<script src="js/app.js?v=2.4"><\/script>');
     }
   </script>
 </body>

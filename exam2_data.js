@@ -1,9 +1,6 @@
-// ============================================================================
-// EGM 5444 / EML 4930: Advanced Dynamics — Exam 2 Structured Data Store
-// Covers Lectures 10–22: Lagrangian Mechanics, Constrained Mechanical Systems,
-// Holonomic Constraints, Constraint Jacobians, Lagrange Multipliers,
-// Baumgarte Stabilization, Contact, Impacts & Hybrid Dynamical Systems.
-// ============================================================================
+// Advanced Dynamics - Exam 2 Master Knowledge Base & Problem Bank
+// Lectures 10-22 (Lagrangian Mechanics, Holonomic/Non-holonomic Constraints, Baumgarte, Impacts, Rotations)
+// 20 Comprehensive Multi-Step Problems with Complete Step Derivations, Hints, Concept Chips & Diagnostic Checkpoints
 
 window.EXAM2_DATA = {
   "courseMeta": {
@@ -3540,6 +3537,760 @@ window.EXAM2_DATA = {
         21
       ],
       "estimatedMinutes": 20
+    },
+    {
+      "id": "practice-e-1",
+      "code": "PRACTICE EXAM E • PROBLEM 1",
+      "shortTitle": "Two-Mass Ladder on Wall & Floor (DAE & Baumgarte)",
+      "title": "Two-Mass Ladder Sliding on Frictionless Floor and Wall (Holonomic Constraint & Baumgarte)",
+      "subtitle": "2-DOF Maximal Coordinates, Constraint Jacobian J, Block Saddle-Point DAE, Baumgarte Tuning & Internal Compression",
+      "category": "Constrained Systems",
+      "badgeClass": "badge-purple",
+      "difficulty": "Advanced",
+      "estimatedTime": "25 mins",
+      "estimatedMinutes": 25,
+      "matchedLectures": "Lec 17–19",
+      "lectureRefs": [
+        {
+          "code": "Lec 17",
+          "title": "Holonomic Constraints & DAE Formulation",
+          "time": "18:20"
+        },
+        {
+          "code": "Lec 18",
+          "title": "Lagrange Multipliers & Constraint Forces",
+          "time": "22:15"
+        },
+        {
+          "code": "Lec 19",
+          "title": "Constraint Drift & Baumgarte Stabilization",
+          "time": "28:40"
+        }
+      ],
+      "svgDiagram": "<svg viewBox=\"0 0 460 300\" width=\"100%\" height=\"230\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <pattern id=\"hatch-wall\" width=\"10\" height=\"10\" patternTransform=\"rotate(45 0 0)\" patternUnits=\"userSpaceOnUse\">\n      <line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"10\" stroke=\"#cbd5e1\" stroke-width=\"1.5\" />\n    </pattern>\n    <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"6\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">\n      <path d=\"M 0 1 L 10 5 L 0 9 z\" fill=\"#2563eb\" />\n    </marker>\n    <marker id=\"arrow-red\" viewBox=\"0 0 10 10\" refX=\"6\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">\n      <path d=\"M 0 1 L 10 5 L 0 9 z\" fill=\"#dc2626\" />\n    </marker>\n  </defs>\n\n  <!-- Wall & Floor hatching -->\n  <rect x=\"20\" y=\"20\" width=\"40\" height=\"230\" fill=\"url(#hatch-wall)\" />\n  <line x1=\"60\" y1=\"20\" x2=\"60\" y2=\"250\" stroke=\"#475569\" stroke-width=\"3\" />\n  <rect x=\"20\" y=\"250\" width=\"420\" height=\"35\" fill=\"url(#hatch-wall)\" />\n  <line x1=\"20\" y1=\"250\" x2=\"440\" y2=\"250\" stroke=\"#475569\" stroke-width=\"3\" />\n\n  <!-- Origin label -->\n  <circle cx=\"60\" cy=\"250\" r=\"4\" fill=\"#0f172a\" />\n  <text x=\"44\" y=\"266\" font-size=\"11\" font-weight=\"700\" fill=\"#0f172a\">(0,0)</text>\n\n  <!-- Ladder Rod -->\n  <line x1=\"60\" y1=\"70\" x2=\"340\" y2=\"250\" stroke=\"#334155\" stroke-width=\"6\" stroke-linecap=\"round\" />\n  <text x=\"210\" y=\"150\" font-size=\"12\" font-weight=\"800\" fill=\"#2563eb\" transform=\"rotate(-32.7 210 150)\">Length ℓ = 10 m</text>\n\n  <!-- Mass m2 on Wall (y2) -->\n  <circle cx=\"60\" cy=\"70\" r=\"14\" fill=\"#6366f1\" stroke=\"#312e81\" stroke-width=\"2.5\" />\n  <text x=\"52\" y=\"74\" font-size=\"11\" font-weight=\"800\" fill=\"#ffffff\">m₂</text>\n  <!-- Roller wheels on wall -->\n  <circle cx=\"43\" cy=\"62\" r=\"4\" fill=\"#94a3b8\" stroke=\"#334155\" stroke-width=\"1.5\" />\n  <circle cx=\"43\" cy=\"78\" r=\"4\" fill=\"#94a3b8\" stroke=\"#334155\" stroke-width=\"1.5\" />\n  <line x1=\"80\" y1=\"70\" x2=\"110\" y2=\"70\" stroke=\"#64748b\" stroke-width=\"1.5\" stroke-dasharray=\"2,2\" />\n  <text x=\"115\" y=\"74\" font-size=\"11\" font-weight=\"700\" fill=\"#6366f1\">y₂ (Wall)</text>\n  <!-- Gravity on m2 -->\n  <line x1=\"60\" y1=\"90\" x2=\"60\" y2=\"125\" stroke=\"#dc2626\" stroke-width=\"2\" marker-end=\"url(#arrow-red)\" />\n  <text x=\"68\" y=\"115\" font-size=\"11\" font-weight=\"700\" fill=\"#dc2626\">m₂g</text>\n\n  <!-- Mass m1 on Floor (x1) -->\n  <circle cx=\"340\" cy=\"250\" r=\"14\" fill=\"#3b82f6\" stroke=\"#1e3a8a\" stroke-width=\"2.5\" />\n  <text x=\"332\" y=\"254\" font-size=\"11\" font-weight=\"800\" fill=\"#ffffff\">m₁</text>\n  <!-- Roller wheels on floor -->\n  <circle cx=\"332\" cy=\"267\" r=\"4\" fill=\"#94a3b8\" stroke=\"#334155\" stroke-width=\"1.5\" />\n  <circle cx=\"348\" cy=\"267\" r=\"4\" fill=\"#94a3b8\" stroke=\"#334155\" stroke-width=\"1.5\" />\n  <line x1=\"340\" y1=\"230\" x2=\"340\" y2=\"200\" stroke=\"#64748b\" stroke-width=\"1.5\" stroke-dasharray=\"2,2\" />\n  <text x=\"325\" y=\"195\" font-size=\"11\" font-weight=\"700\" fill=\"#3b82f6\">x₁ (Floor)</text>\n\n  <!-- Constraint Formula Box -->\n  <rect x=\"230\" y=\"30\" width=\"200\" height=\"58\" rx=\"6\" fill=\"#f8fafc\" stroke=\"#cbd5e1\" stroke-width=\"1.5\" />\n  <text x=\"240\" y=\"50\" font-size=\"11\" font-weight=\"800\" fill=\"#0f172a\">Holonomic Constraint:</text>\n  <text x=\"240\" y=\"68\" font-size=\"11\" font-weight=\"700\" fill=\"#2563eb\">g(q) = x₁² + y₂² - ℓ² = 0</text>\n  <text x=\"240\" y=\"81\" font-size=\"9\" fill=\"#64748b\">m₁ = 1 kg, m₂ = 1 kg, ℓ = 10 m</text>\n</svg>",
+      "prompt": "A rigid ladder of length $\\ell = 10\\text{ m}$ connects mass $m_1 = 1\\text{ kg}$ on a frictionless horizontal floor and mass $m_2 = 1\\text{ kg}$ on a frictionless vertical wall. Using unconstrained 2D coordinates $\\mathbf{q} = [x_1, y_2]^T$, formulate the holonomic constraint $g(\\mathbf{q})=0$, derive the constraint Jacobian $\\mathbf{J}$, assemble the $3\\times 3$ block saddle-point DAE system, tune a critically damped Baumgarte stabilization law with $\\omega_n = 10\\text{ rad/s}$, and compute the Lagrange multiplier $\\lambda$ and internal rod compression at the kinematic state $x_1 = 8\\text{ m}, y_2 = 6\\text{ m}, \\dot{x}_1 = 3\\text{ m/s}, \\dot{y}_2 = -4\\text{ m/s}$.",
+      "goalStatement": "Formulate the holonomic constraint $g(\\mathbf{q})=0$, derive $\\mathbf{J}$ and $\\dot{\\mathbf{J}}\\dot{\\mathbf{q}}$, assemble the $3\\times 3$ saddle-point DAE, implement Baumgarte stabilization, and calculate the exact Lagrange multiplier $\\lambda$ and rod compression force.",
+      "parameters": [
+        {
+          "symbol": "m_1",
+          "desc": "Mass sliding on frictionless horizontal floor (1 kg)"
+        },
+        {
+          "symbol": "m_2",
+          "desc": "Mass sliding on frictionless vertical wall (1 kg)"
+        },
+        {
+          "symbol": "\\ell",
+          "desc": "Rigid ladder connecting rod length (10 m)"
+        },
+        {
+          "symbol": "g",
+          "desc": "Gravitational acceleration downward along -y (9.81 m/s²)"
+        },
+        {
+          "symbol": "\\omega_n, \\zeta",
+          "desc": "Baumgarte natural frequency (10 rad/s) and critical damping ratio (ζ = 1.0)"
+        }
+      ],
+      "steps": [
+        {
+          "stepNumber": 1,
+          "badge": "STEP 1 OF 4 • CONSTRAINT KINEMATICS",
+          "title": "Holonomic Constraint Equation and Constraint Jacobian $\\mathbf{J}$",
+          "goal": "Write the algebraic constraint $g(\\mathbf{q}) = 0$ fixing the rod length and differentiate with respect to time to extract the constraint Jacobian $\\mathbf{J}$ and acceleration term $\\dot{\\mathbf{J}}\\dot{\\mathbf{q}}$.",
+          "intuition": "The distance between $(x_1, 0)$ and $(0, y_2)$ is fixed at $\\ell = 10\\text{ m}$. Applying the Pythagorean theorem yields $x_1^2 + y_2^2 = \\ell^2$. Differentiating once gives the Pfaffian velocity constraint $\\mathbf{J}\\dot{\\mathbf{q}} = 0$, and differentiating again reveals the centripetal acceleration term $\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = 2(\\dot{x}_1^2 + \\dot{y}_2^2)$ required on the right-hand side of the DAE.",
+          "conceptLinks": [
+            "holonomic-constraints",
+            "constraint-jacobian"
+          ],
+          "hint1": "Write $g(\\mathbf{q}) = x_1^2 + y_2^2 - \\ell^2 = 0$. The Jacobian is the gradient $\\mathbf{J} = [\\partial g/\\partial x_1, \\partial g/\\partial y_2]$.",
+          "hint2": "Differentiating $\\dot{g} = 2x_1\\dot{x}_1 + 2y_2\\dot{y}_2$ with respect to time gives $\\ddot{g} = 2x_1\\ddot{x}_1 + 2y_2\\ddot{y}_2 + 2\\dot{x}_1^2 + 2\\dot{y}_2^2 = \\mathbf{J}\\ddot{\\mathbf{q}} + \\dot{\\mathbf{J}}\\dot{\\mathbf{q}}$.",
+          "checkpoint": {
+            "question": "For coordinates $\\mathbf{q} = [x_1, y_2]^T$ and $g(\\mathbf{q}) = x_1^2 + y_2^2 - \\ell^2 = 0$, what are the Jacobian $\\mathbf{J}$ and convective acceleration term $\\dot{\\mathbf{J}}\\dot{\\mathbf{q}}$?",
+            "options": [
+              "$\\mathbf{J} = [x_1, y_2], \\quad \\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = \\dot{x}_1^2 + \\dot{y}_2^2$",
+              "$\\mathbf{J} = [2x_1, 2y_2], \\quad \\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = 2(\\dot{x}_1^2 + \\dot{y}_2^2)$",
+              "$\\mathbf{J} = [2x_1, -2y_2], \\quad \\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = 2(\\dot{x}_1\\ddot{x}_1 + \\dot{y}_2\\ddot{y}_2)$",
+              "$\\mathbf{J} = [x_1/\\ell, y_2/\\ell], \\quad \\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = 0$"
+            ],
+            "correctIndex": 1,
+            "trapFeedback": [
+              "Missing the factor of 2 from $\\frac{d}{dx}(x^2) = 2x$. While the factor of 2 can be scaled into $\\lambda$, the unscaled derivative is $[2x_1, 2y_2]$.",
+              "Correct! $\\mathbf{J} = [2x_1, 2y_2]$ and $\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = \\frac{d}{dt}[2x_1, 2y_2][\\dot{x}_1, \\dot{y}_2]^T = 2\\dot{x}_1^2 + 2\\dot{y}_2^2$.",
+              "Watch the signs: $x_1^2 + y_2^2 - \\ell^2 = 0$ has positive signs for both terms. Also, $\\dot{\\mathbf{J}}\\dot{\\mathbf{q}}$ depends on velocities squared, not accelerations.",
+              "This would be the unit normal Jacobian for $g = \\sqrt{x_1^2 + y_2^2} - \\ell = 0$. For the quadratic formulation, $\\mathbf{J} = [2x_1, 2y_2]$."
+            ]
+          },
+          "derivation": "### Step 1: Constraint Kinematics and Acceleration Derivation\n\nThe ladder's endpoints are constrained to the axes: mass 1 at $\\mathbf{r}_1 = [x_1, 0]^T$ and mass 2 at $\\mathbf{r}_2 = [0, y_2]^T$. The constant length $\\ell$ gives the holonomic constraint:\n$$g(\\mathbf{q}) = x_1^2 + y_2^2 - \\ell^2 = 0$$\n\nTaking the partial derivatives with respect to $\\mathbf{q} = [x_1, y_2]^T$:\n$$\\mathbf{J}(\\mathbf{q}) = \\frac{\\partial g}{\\partial \\mathbf{q}} = \\begin{bmatrix} \\frac{\\partial g}{\\partial x_1} & \\frac{\\partial g}{\\partial y_2} \\end{bmatrix} = \\begin{bmatrix} 2x_1 & 2y_2 \\end{bmatrix}$$\n\nDifferentiating the velocity constraint $\\dot{g} = \\mathbf{J}\\dot{\\mathbf{q}} = 2x_1\\dot{x}_1 + 2y_2\\dot{y}_2 = 0$ with respect to time using the product rule:\n$$\\ddot{g} = \\frac{d}{dt}(2x_1\\dot{x}_1 + 2y_2\\dot{y}_2) = 2x_1\\ddot{x}_1 + 2\\dot{x}_1^2 + 2y_2\\ddot{y}_2 + 2\\dot{y}_2^2 = 0$$\n\nRearranging into standard manipulator matrix form $\\mathbf{J}\\ddot{\\mathbf{q}} + \\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = 0$:\n$$\\mathbf{J}\\ddot{\\mathbf{q}} = \\begin{bmatrix} 2x_1 & 2y_2 \\end{bmatrix} \\begin{bmatrix} \\ddot{x}_1 \\\\ \\ddot{y}_2 \\end{bmatrix}, \\qquad \\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = 2(\\dot{x}_1^2 + \\dot{y}_2^2)$$\n\nTherefore, the acceleration constraint on the right-hand side of the DAE is:\n$$\\mathbf{J}\\ddot{\\mathbf{q}} = -\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = -2(\\dot{x}_1^2 + \\dot{y}_2^2)$$"
+        },
+        {
+          "stepNumber": 2,
+          "badge": "STEP 2 OF 4 • SADDLE-POINT DAE",
+          "title": "Assembly of the $3\\times 3$ Constrained Equations of Motion",
+          "goal": "Assemble the unconstrained mass matrix $\\mathbf{M}$, applied force vector $\\mathbf{f}$, and augment with the constraint Jacobian into the block saddle-point DAE system.",
+          "intuition": "In maximal coordinates, each mass has an unconstrained Newton-Euler equation $m_i \\ddot{q}_i = f_i + f_{c,i}$. The constraint force is $\\mathbf{f}_c = \\mathbf{J}^T\\lambda = [2x_1\\lambda, 2y_2\\lambda]^T$. Combining the equations of motion with the acceleration constraint yields a symmetric-indefinite saddle-point linear system that can be solved directly for accelerations and the Lagrange multiplier simultaneously.",
+          "conceptLinks": [
+            "lagrange-multipliers",
+            "manipulator-equation"
+          ],
+          "hint1": "The kinetic energy is $T = \\frac{1}{2}m_1\\dot{x}_1^2 + \\frac{1}{2}m_2\\dot{y}_2^2$, so $\\mathbf{M} = \\text{diag}(m_1, m_2)$. Gravity acts only on mass 2 in the $-y$ direction.",
+          "hint2": "The block DAE structure is $\\begin{bmatrix} \\mathbf{M} & -\\mathbf{J}^T \\\\ \\mathbf{J} & 0 \\end{bmatrix} \\begin{bmatrix} \\ddot{\\mathbf{q}} \\\\ \\lambda \\end{bmatrix} = \\begin{bmatrix} \\mathbf{f} \\\\ -\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} \\end{bmatrix}$.",
+          "checkpoint": {
+            "question": "With $m_1 = 1\\text{ kg}, m_2 = 1\\text{ kg}$, and gravity $g = 9.81\\text{ m/s}^2$ downward on $m_2$, what is the exact $3\\times 3$ block saddle-point DAE matrix equation?",
+            "options": [
+              "$\\begin{bmatrix} 1 & 0 & 2x_1 \\\\ 0 & 1 & 2y_2 \\\\ 2x_1 & 2y_2 & 0 \\end{bmatrix} \\begin{bmatrix} \\ddot{x}_1 \\\\ \\ddot{y}_2 \\\\ \\lambda \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ 9.81 \\\\ 2(\\dot{x}_1^2+\\dot{y}_2^2) \\end{bmatrix}$",
+              "$\\begin{bmatrix} 1 & 0 & -x_1 \\\\ 0 & 1 & -y_2 \\\\ x_1 & y_2 & 0 \\end{bmatrix} \\begin{bmatrix} \\ddot{x}_1 \\\\ \\ddot{y}_2 \\\\ \\lambda \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -9.81 \\\\ -(\\dot{x}_1^2+\\dot{y}_2^2) \\end{bmatrix}$",
+              "$\\begin{bmatrix} 1 & 0 & -2x_1 \\\\ 0 & 1 & -2y_2 \\\\ 2x_1 & 2y_2 & 0 \\end{bmatrix} \\begin{bmatrix} \\ddot{x}_1 \\\\ \\ddot{y}_2 \\\\ \\lambda \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -9.81 \\\\ -2(\\dot{x}_1^2+\\dot{y}_2^2) \\end{bmatrix}$",
+              "$\\begin{bmatrix} 1 & 1 & -2x_1 \\\\ 1 & 1 & -2y_2 \\\\ 2x_1 & 2y_2 & 0 \\end{bmatrix} \\begin{bmatrix} \\ddot{x}_1 \\\\ \\ddot{y}_2 \\\\ \\lambda \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -9.81 \\\\ 0 \\end{bmatrix}$"
+            ],
+            "correctIndex": 2,
+            "trapFeedback": [
+              "The top-right block is $-\\mathbf{J}^T$, so the entries must be negative ($-2x_1, -2y_2$). Also, gravity acts in the negative $y$ direction ($-9.81$), and $-\\dot{\\mathbf{J}}\\dot{\\mathbf{q}}$ is negative.",
+              "Missing the factor of 2 in the constraint Jacobian $\\mathbf{J} = [2x_1, 2y_2]$.",
+              "Correct! The saddle-point system has $\\mathbf{M} = \\mathbf{I}_{2\\times 2}$, $-\\mathbf{J}^T = [-2x_1, -2y_2]^T$, $\\mathbf{f} = [0, -9.81]^T$, and right-hand acceleration $-\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = -2(\\dot{x}_1^2+\\dot{y}_2^2)$.",
+              "The mass matrix $\\mathbf{M}$ is uncoupled and diagonal $\\text{diag}(1, 1)$, not filled with ones."
+            ]
+          },
+          "derivation": "### Step 2: $3\\times 3$ Saddle-Point DAE Matrix Formulation\n\nThe unconstrained generalized coordinates are $\\mathbf{q} = [x_1, y_2]^T$. The mass matrix and applied force vectors are:\n$$\\mathbf{M} = \\begin{bmatrix} m_1 & 0 \\\\ 0 & m_2 \\end{bmatrix} = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}, \\qquad \\mathbf{f} = \\begin{bmatrix} f_{x1} \\\\ f_{y2} \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -m_2 g \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -9.81 \\end{bmatrix}$$\n\nAccording to Lagrange's equations of the first kind:\n$$\\mathbf{M}\\ddot{\\mathbf{q}} = \\mathbf{f} + \\mathbf{J}^T\\lambda \\implies \\mathbf{M}\\ddot{\\mathbf{q}} - \\mathbf{J}^T\\lambda = \\mathbf{f}$$\n\nTogether with the acceleration constraint $\\mathbf{J}\\ddot{\\mathbf{q}} = -\\dot{\\mathbf{J}}\\dot{\\mathbf{q}}$, we assemble the $3\\times 3$ block saddle-point matrix equation:\n$$\\begin{bmatrix} \\mathbf{M} & -\\mathbf{J}^T \\\\ \\mathbf{J} & 0 \\end{bmatrix} \\begin{bmatrix} \\ddot{\\mathbf{q}} \\\\ \\lambda \\end{bmatrix} = \\begin{bmatrix} \\mathbf{f} \\\\ -\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} \\end{bmatrix}$$\n\nSubstituting our analytical matrices:\n$$\\begin{bmatrix} 1 & 0 & -2x_1 \\\\ 0 & 1 & -2y_2 \\\\ 2x_1 & 2y_2 & 0 \\end{bmatrix} \\begin{bmatrix} \\ddot{x}_1 \\\\ \\ddot{y}_2 \\\\ \\lambda \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -9.81 \\\\ -2(\\dot{x}_1^2 + \\dot{y}_2^2) \\end{bmatrix}$$\n\nThis is an index-1 DAE system that uniquely determines $[ddot{x}_1, \\ddot{y}_2, \\lambda]^T$ at any nonsingular configuration where $\\mathbf{J} \\ne \\mathbf{0}$."
+        },
+        {
+          "stepNumber": 3,
+          "badge": "STEP 3 OF 4 • BAUMGARTE STABILIZATION",
+          "title": "Constraint Drift Mitigation via Baumgarte Tuning",
+          "goal": "Formulate the Baumgarte stabilized acceleration constraint for critical damping ($\rzeta = 1$) and $\\omega_n = 10\\text{ rad/s}$ to prevent numerical drift away from the manifold $g=0$.",
+          "intuition": "Integrating $\\ddot{g} = 0$ in numerical simulation causes accumulation of truncation error, allowing the ladder to stretch or compress over time (drift). Baumgarte stabilization introduces feedback proportional to constraint position error $g$ and velocity error $\\dot{g}$, converting the error dynamics into a stable damped harmonic oscillator $\\ddot{g} + 2\\zeta\\omega_n\\dot{g} + \\omega_n^2 g = 0$.",
+          "conceptLinks": [
+            "baumgarte-stabilization",
+            "holonomic-constraints"
+          ],
+          "hint1": "The stabilization equation replaces $\\ddot{g} = 0$ with $\\ddot{g} + 2\\zeta\\omega_n\\dot{g} + \\omega_n^2 g = 0$.",
+          "hint2": "For critical damping $\\zeta = 1.0$ and $\\omega_n = 10\\text{ rad/s}$, the gains are $\\alpha = 2\\zeta\\omega_n = 20$ and $\\beta = \\omega_n^2 = 100$.",
+          "checkpoint": {
+            "question": "For critically damped Baumgarte stabilization with $\\omega_n = 10\\text{ rad/s}$ and $\\zeta = 1$, what is the modified right-hand side acceleration term $b_{\\text{stab}}$ for the third row of the DAE?",
+            "options": [
+              "$-\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} - 20(2x_1\\dot{x}_1 + 2y_2\\dot{y}_2) - 100(x_1^2 + y_2^2 - \\ell^2)$",
+              "$-\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} - 10(2x_1\\dot{x}_1 + 2y_2\\dot{y}_2) - 10(x_1^2 + y_2^2 - \\ell^2)$",
+              "$-\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} + 20\\dot{g} + 100 g$",
+              "$+\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} - 20(x_1^2 + y_2^2 - \\ell^2)$"
+            ],
+            "correctIndex": 0,
+            "trapFeedback": [
+              "Correct! $\\mathbf{J}\\ddot{\\mathbf{q}} = -\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} - 2\\zeta\\omega_n \\dot{g} - \\omega_n^2 g$, where $2\\zeta\\omega_n = 20$ and $\\omega_n^2 = 100$.",
+              "Be careful with parameter definitions: the damping coefficient is $2\\zeta\\omega_n = 2(1)(10) = 20$, and stiffness is $\\omega_n^2 = 10^2 = 100$, not 10 and 10.",
+              "Watch the signs: to pull errors back to zero, the feedback terms must be subtracted on the right-hand side: $-20\\dot{g} - 100g$. Positive feedback causes explosive instability!",
+              "Convective acceleration $-\\dot{\\mathbf{J}}\\dot{\\mathbf{q}}$ must have a negative sign, and the velocity error term $-20\\dot{g}$ cannot be omitted."
+            ]
+          },
+          "derivation": "### Step 3: Baumgarte Stabilization Law Formulation\n\nWhen integrating the index-1 DAE $\\mathbf{J}\\ddot{\\mathbf{q}} = -\\dot{\\mathbf{J}}\\dot{\\mathbf{q}}$, numerical integration errors cause position drift ($g \\ne 0$) and velocity drift ($\\dot{g} \\ne 0$).\n\nBaumgarte's method alters the constraint acceleration to enforce second-order error regulation:\n$$\\ddot{g} + 2\\zeta\\omega_n \\dot{g} + \\omega_n^2 g = 0$$\n\nExpanding $\\ddot{g} = \\mathbf{J}\\ddot{\\mathbf{q}} + \\dot{\\mathbf{J}}\\dot{\\mathbf{q}}$ and isolating the acceleration term $\\mathbf{J}\\ddot{\\mathbf{q}}$:\n$$\\mathbf{J}\\ddot{\\mathbf{q}} = -\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} - 2\\zeta\\omega_n \\dot{g} - \\omega_n^2 g$$\n\nWith natural frequency $\\omega_n = 10\\text{ rad/s}$ and critical damping ratio $\\zeta = 1.0$:\n$$2\\zeta\\omega_n = 2(1.0)(10) = 20\\text{ s}^{-1}, \\qquad \\omega_n^2 = 10^2 = 100\\text{ s}^{-2}$$\n\nSubstituting the explicit state expressions for $g$ and $\\dot{g}$:\n$$g(\\mathbf{q}) = x_1^2 + y_2^2 - \\ell^2$$\n$$\\dot{g}(\\mathbf{q}, \\dot{\\mathbf{q}}) = 2x_1\\dot{x}_1 + 2y_2\\dot{y}_2$$\n\nThe stabilized right-hand side scalar for row 3 becomes:\n$$b_{\\text{stab}} = -2(\\dot{x}_1^2 + \\dot{y}_2^2) - 20(2x_1\\dot{x}_1 + 2y_2\\dot{y}_2) - 100(x_1^2 + y_2^2 - \\ell^2)$$\n\nThis ensures any numerical perturbation from the constraint manifold decays exponentially without oscillatory overshoot."
+        },
+        {
+          "stepNumber": 4,
+          "badge": "STEP 4 OF 4 • STATE EVALUATION & INTERNAL FORCE",
+          "title": "Numerical Solution for $\\lambda$, Accelerations, and Rod Compression",
+          "goal": "Substitute state $x_1 = 8\\text{ m}, y_2 = 6\\text{ m}, \\dot{x}_1 = 3\\text{ m/s}, \\dot{y}_2 = -4\\text{ m/s}$ into the DAE system, solve for the Lagrange multiplier $\\lambda$, accelerations $\\ddot{x}_1, \\ddot{y}_2$, and calculate the physical compression force along the rod.",
+          "intuition": "First verify that the state is on the constraint manifold: $8^2 + 6^2 = 64 + 36 = 100 = 10^2$ (holds!) and $\\dot{g} = 2(8)(3) + 2(6)(-4) = 48 - 48 = 0$ (holds!). Invert the $3\\times 3$ system algebraically using Schur complements: $\\lambda = (\\mathbf{J}\\mathbf{M}^{-1}\\mathbf{J}^T)^{-1}(\\mathbf{J}\\mathbf{M}^{-1}\\mathbf{f} + \\dot{\\mathbf{J}}\\dot{\\mathbf{q}})$. Then extract the physical internal force along the rod axis.",
+          "conceptLinks": [
+            "lagrange-multipliers",
+            "constraint-jacobian"
+          ],
+          "hint1": "Compute the Delassus scalar $G = \\mathbf{J}\\mathbf{M}^{-1}\\mathbf{J}^T = (2x_1)^2 + (2y_2)^2 = 4(x_1^2 + y_2^2) = 4\\ell^2 = 400$.",
+          "hint2": "Accelerations are $\\ddot{x}_1 = 2x_1\\lambda$ and $\\ddot{y}_2 = -g + 2y_2\\lambda$. Plug these into the acceleration constraint $2x_1\\ddot{x}_1 + 2y_2\\ddot{y}_2 = -2(\\dot{x}_1^2 + \\dot{y}_2^2)$ to solve for $\\lambda$.",
+          "checkpoint": {
+            "question": "At state $x_1 = 8, y_2 = 6, \\dot{x}_1 = 3, \\dot{y}_2 = -4$ with $g = 9.81\\text{ m/s}^2$, what are the multiplier $\\lambda$ and physical compression force $F_{\\text{rod}}$?",
+            "options": [
+              "$\\lambda = 0.500\\text{ N/m}^2, \\quad F_{\\text{rod}} = 10.0\\text{ N}$",
+              "$\\lambda = -0.169\\text{ N/m}^2, \\quad F_{\\text{rod}} = -3.39\\text{ N}$ (rod in tension)",
+              "$\\lambda = 0.050\\text{ N/m}^2, \\quad F_{\\text{rod}} = 1.00\\text{ N}$",
+              "$\\lambda = \\frac{67.72}{400} \\approx 0.1693\\text{ N/m}^2, \\quad F_{\\text{rod}} = 2\\ell\\lambda = 3.386\\text{ N}$ (compression)"
+            ],
+            "correctIndex": 3,
+            "trapFeedback": [
+              "Check your arithmetic: the Delassus scalar is $4(8^2 + 6^2) = 400$, and the numerator is $2y_2(-9.81) - (-50) = 117.72 - 50 = 67.72$, giving $\\lambda = 67.72/400 = 0.1693$.",
+              "$\\lambda$ is positive because gravity pushes mass 2 downward, compressing the ladder against the floor. A negative sign would indicate tension.",
+              "Did you forget the gravity term $2y_2 g = 12(9.81) = 117.72$? Solving without gravity yields an incorrect result.",
+              "Correct! $\\lambda = \\frac{67.72}{400} \\approx 0.1693\\text{ N/m}^2$. The constraint force vector is $\\mathbf{f}_c = \\mathbf{J}^T\\lambda = [16\\lambda, 12\\lambda]^T$, giving internal compression $F_{\\text{rod}} = \\|\\mathbf{f}_c\\| = 2\\ell\\lambda = 2(10)(0.1693) = 3.386\\text{ N}$."
+            ]
+          },
+          "derivation": "### Step 4: Numerical Evaluation and Internal Force Analysis\n\n**1. Verification of State on Manifold:**\nAt $x_1 = 8\\text{ m}, y_2 = 6\\text{ m}$:\n$$g = 8^2 + 6^2 - 10^2 = 64 + 36 - 100 = 0\\text{ m}^2 \\quad \\checkmark$$\nAt $\\dot{x}_1 = 3\\text{ m/s}, \\dot{y}_2 = -4\\text{ m/s}$:\n$$\\dot{g} = 2(8)(3) + 2(6)(-4) = 48 - 48 = 0\\text{ m}^2/\\text{s} \\quad \\checkmark$$\n\n**2. Assemble Numerical DAE System:**\n$$\\mathbf{J} = \\begin{bmatrix} 2(8) & 2(6) \\end{bmatrix} = \\begin{bmatrix} 16 & 12 \\end{bmatrix}$$\n$$\\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = 2(3^2 + (-4)^2) = 2(9 + 16) = 50\\text{ m}^2/\\text{s}^2$$\n$$\\begin{bmatrix} 1 & 0 & -16 \\\\ 0 & 1 & -12 \\\\ 16 & 12 & 0 \\end{bmatrix} \\begin{bmatrix} \\ddot{x}_1 \\\\ \\ddot{y}_2 \\\\ \\lambda \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -9.81 \\\\ -50 \\end{bmatrix}$$\n\n**3. Solve for Multiplier $\\lambda$:**\nFrom the first two equations:\n$$\\ddot{x}_1 = 16\\lambda$$\n$$\\ddot{y}_2 = -9.81 + 12\\lambda$$\n\nSubstitute into the third row:\n$$16(16\\lambda) + 12(-9.81 + 12\\lambda) = -50$$\n$$256\\lambda + 144\\lambda - 117.72 = -50$$\n$$400\\lambda = 117.72 - 50 = 67.72$$\n$$\\lambda = \\frac{67.72}{400} = 0.1693\\text{ N/m}^2$$\n\n*(Note: If taking $g = 10\\text{ m/s}^2$ for rough estimation: $400\\lambda = 120 - 50 = 70 \\implies \\lambda = 0.175\\text{ N/m}^2$)*\n\n**4. Acceleration Vectors:**\n$$\\ddot{x}_1 = 16(0.1693) = +2.709\\text{ m/s}^2$$\n$$\\ddot{y}_2 = -9.81 + 12(0.1693) = -9.81 + 2.032 = -7.778\\text{ m/s}^2$$\n\n**5. Physical Internal Force Along Rod:**\nThe constraint force vector acting on the system is:\n$$\\mathbf{f}_c = \\mathbf{J}^T\\lambda = \\begin{bmatrix} 2x_1 \\lambda \\\\ 2y_2 \\lambda \\end{bmatrix} = \\lambda \\begin{bmatrix} 16 \\\\ 12 \\end{bmatrix} = \\begin{bmatrix} 2.709 \\\\ 2.032 \\end{bmatrix}\\text{ N}$$\nThe magnitude of this constraint force represents the rod's internal compressive thrust:\n$$F_{\\text{rod}} = \\|\\mathbf{f}_c\\| = \\sqrt{(16\\lambda)^2 + (12\\lambda)^2} = \\sqrt{400}\\lambda = 20\\lambda = 20(0.1693) = 3.386\\text{ N}$$\nBecause $\\lambda > 0$, the force pushes outward at both ends, meaning the ladder rod is in **compression** holding mass 2 from falling in free-fall and pushing mass 1 to the right."
+        }
+      ],
+      "finalAnswer": {
+        "summaryTitle": "Complete Verified Solution — Practice Exam E Problem 1 (Ladder DAE & Baumgarte)",
+        "items": [
+          {
+            "label": "(a) Holonomic Constraint & Jacobian",
+            "math": "$$g(\\mathbf{q}) = x_1^2 + y_2^2 - \\ell^2 = 0, \\qquad \\mathbf{J} = \\begin{bmatrix} 2x_1 & 2y_2 \\end{bmatrix}, \\qquad \\dot{\\mathbf{J}}\\dot{\\mathbf{q}} = 2(\\dot{x}_1^2 + \\dot{y}_2^2)$$"
+          },
+          {
+            "label": "(b) $3\\times 3$ Saddle-Point DAE Matrix",
+            "math": "$$\\begin{bmatrix} m_1 & 0 & -2x_1 \\\\ 0 & m_2 & -2y_2 \\\\ 2x_1 & 2y_2 & 0 \\end{bmatrix} \\begin{bmatrix} \\ddot{x}_1 \\\\ \\ddot{y}_2 \\\\ \\lambda \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -m_2 g \\\\ -2(\\dot{x}_1^2 + \\dot{y}_2^2) \\end{bmatrix}$$"
+          },
+          {
+            "label": "(c) Baumgarte Stabilization Equation (Critically Damped, $\\omega_n = 10\\text{ rad/s}$)",
+            "math": "$$\\mathbf{J}\\ddot{\\mathbf{q}} = -2(\\dot{x}_1^2 + \\dot{y}_2^2) - 20(2x_1\\dot{x}_1 + 2y_2\\dot{y}_2) - 100(x_1^2 + y_2^2 - \\ell^2)$$"
+          },
+          {
+            "label": "(d) State Solution at $(8, 6, 3, -4)$ with $g=9.81\\text{ m/s}^2$",
+            "math": "$$\\lambda = 0.1693\\text{ N/m}^2, \\quad \\ddot{x}_1 = +2.709\\text{ m/s}^2, \\quad \\ddot{y}_2 = -7.778\\text{ m/s}^2, \\quad F_{\\text{rod}} = 3.386\\text{ N} \\text{ (compression)}$$"
+          }
+        ]
+      }
+    },
+    {
+      "id": "practice-e-2",
+      "code": "PRACTICE EXAM E • PROBLEM 2",
+      "shortTitle": "Atwood Machine with Inertia & Viscous Drag (Minimal & DAE)",
+      "title": "Atwood Machine with Inertial Pulley & Viscous Bearing Drag (Minimal & Maximal DAE)",
+      "subtitle": "Lagrangian Dynamics, Rayleigh Dissipation, Terminal Velocity ODE, and Maximal Coordinates Cable Tensions",
+      "category": "Lagrangian Mechanics",
+      "badgeClass": "badge-teal",
+      "difficulty": "Intermediate to Advanced",
+      "estimatedTime": "25 mins",
+      "estimatedMinutes": 25,
+      "matchedLectures": "Lec 11–13, Lec 17",
+      "lectureRefs": [
+        {
+          "code": "Lec 11",
+          "title": "Kinetic & Potential Energy of Rigid Systems",
+          "time": "14:10"
+        },
+        {
+          "code": "Lec 13",
+          "title": "Generalized Forces & Viscous Dissipation",
+          "time": "25:30"
+        },
+        {
+          "code": "Lec 17",
+          "title": "Minimal vs Maximal Coordinates & Multipliers",
+          "time": "30:15"
+        }
+      ],
+      "svgDiagram": "<svg viewBox=\"0 0 460 310\" width=\"100%\" height=\"230\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <pattern id=\"hatch-ceiling\" width=\"10\" height=\"10\" patternTransform=\"rotate(45 0 0)\" patternUnits=\"userSpaceOnUse\">\n      <line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"10\" stroke=\"#cbd5e1\" stroke-width=\"1.5\" />\n    </pattern>\n    <marker id=\"arrow-down\" viewBox=\"0 0 10 10\" refX=\"6\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">\n      <path d=\"M 0 1 L 10 5 L 0 9 z\" fill=\"#059669\" />\n    </marker>\n  </defs>\n\n  <!-- Ceiling -->\n  <rect x=\"130\" y=\"15\" width=\"200\" height=\"18\" fill=\"url(#hatch-ceiling)\" />\n  <line x1=\"130\" y1=\"33\" x2=\"330\" y2=\"33\" stroke=\"#475569\" stroke-width=\"2.5\" />\n\n  <!-- Pulley Bracket & Center -->\n  <line x1=\"230\" y1=\"33\" x2=\"230\" y2=\"85\" stroke=\"#334155\" stroke-width=\"4\" />\n  <circle cx=\"230\" cy=\"85\" r=\"48\" fill=\"#f1f5f9\" stroke=\"#334155\" stroke-width=\"3.5\" />\n  <circle cx=\"230\" cy=\"85\" r=\"8\" fill=\"#334155\" />\n\n  <!-- Pulley Spoke & Damping Indicator -->\n  <line x1=\"230\" y1=\"45\" x2=\"230\" y2=\"125\" stroke=\"#94a3b8\" stroke-width=\"2\" stroke-dasharray=\"3,3\" />\n  <line x1=\"190\" y1=\"85\" x2=\"270\" y2=\"85\" stroke=\"#94a3b8\" stroke-width=\"2\" stroke-dasharray=\"3,3\" />\n  <path d=\"M 245 60 A 30 30 0 0 1 262 95\" fill=\"none\" stroke=\"#d97706\" stroke-width=\"2\" marker-end=\"url(#arrow-down)\" />\n  <text x=\"270\" y=\"75\" font-size=\"10\" font-weight=\"700\" fill=\"#d97706\">Drag -bθ̇</text>\n\n  <!-- Left Cable & Mass m1 -->\n  <line x1=\"182\" y1=\"85\" x2=\"182\" y2=\"210\" stroke=\"#0f172a\" stroke-width=\"2.5\" />\n  <rect x=\"160\" y=\"210\" width=\"44\" height=\"44\" rx=\"4\" fill=\"#3b82f6\" stroke=\"#1e3a8a\" stroke-width=\"2\" />\n  <text x=\"171\" y=\"236\" font-size=\"12\" font-weight=\"800\" fill=\"#ffffff\">m₁</text>\n  <text x=\"166\" y=\"248\" font-size=\"9\" fill=\"#dbeafe\">3 kg</text>\n  <line x1=\"140\" y1=\"85\" x2=\"140\" y2=\"210\" stroke=\"#059669\" stroke-width=\"1.5\" marker-end=\"url(#arrow-down)\" />\n  <text x=\"122\" y=\"155\" font-size=\"12\" font-weight=\"800\" fill=\"#059669\">+y</text>\n\n  <!-- Right Cable & Mass m2 -->\n  <line x1=\"278\" y1=\"85\" x2=\"278\" y2=\"160\" stroke=\"#0f172a\" stroke-width=\"2.5\" />\n  <rect x=\"258\" y=\"160\" width=\"40\" height=\"40\" rx=\"4\" fill=\"#6366f1\" stroke=\"#312e81\" stroke-width=\"2\" />\n  <text x=\"268\" y=\"184\" font-size=\"12\" font-weight=\"800\" fill=\"#ffffff\">m₂</text>\n  <text x=\"265\" y=\"194\" font-size=\"9\" fill=\"#e0e7ff\">1 kg</text>\n  <text x=\"305\" y=\"182\" font-size=\"10\" font-weight=\"700\" fill=\"#6366f1\">L - y</text>\n\n  <!-- Specs Card -->\n  <rect x=\"330\" y=\"45\" width=\"120\" height=\"85\" rx=\"5\" fill=\"#f8fafc\" stroke=\"#cbd5e1\" stroke-width=\"1\" />\n  <text x=\"338\" y=\"62\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">System Specs:</text>\n  <text x=\"338\" y=\"77\" font-size=\"9\" fill=\"#475569\">m₁ = 3 kg, m₂ = 1 kg</text>\n  <text x=\"338\" y=\"91\" font-size=\"9\" fill=\"#475569\">I/r² = 1 kg</text>\n  <text x=\"338\" y=\"105\" font-size=\"9\" fill=\"#475569\">b/r² = 2 N·s/m</text>\n  <text x=\"338\" y=\"119\" font-size=\"9\" font-weight=\"700\" fill=\"#059669\">g = 10 m/s²</text>\n</svg>",
+      "prompt": "An Atwood machine consists of suspended masses $m_1 = 3\\text{ kg}$ and $m_2 = 1\\text{ kg}$ connected by an inextensible cable over a pulley of radius $r$ and inertia $I$, where the equivalent rotational inertia is $I/r^2 = 1\\text{ kg}$. The pulley axle experiences viscous bearing drag torque $\\tau_{\\text{drag}} = -b\\dot{\\theta}$ with $b/r^2 = 2\\text{ N}\\cdot\\text{s/m}$. Using gravitational acceleration $g = 10\\text{ m/s}^2$: (a) define the minimal coordinate $q=y$ (downward displacement of $m_1$) and derive $T, V$, and the generalized force $Q_y$; (b) formulate the equation of motion; (c) determine the terminal speed and velocity time-history $\\dot{y}(t)$ from rest; and (d) (Graduate Part) reformulate in 3-DOF maximal coordinates $\\mathbf{q} = [y_1, y_2, \\theta]^T$ with holonomic constraints to solve for the cable tensions $\\lambda_1, \\lambda_2$ at steady-state.",
+      "goalStatement": "Derive the Lagrangian EOM with Rayleigh dissipation, solve the first-order ODE for terminal speed, and formulate the maximal DAE system to extract cable tensions.",
+      "parameters": [
+        {
+          "symbol": "m_1, m_2",
+          "desc": "Suspended masses (m₁ = 3 kg, m₂ = 1 kg)"
+        },
+        {
+          "symbol": "I/r^2",
+          "desc": "Equivalent pulley rotational inertia (1 kg)"
+        },
+        {
+          "symbol": "b/r^2",
+          "desc": "Equivalent bearing viscous damping coefficient (2 N·s/m)"
+        },
+        {
+          "symbol": "g",
+          "desc": "Gravitational acceleration (10 m/s²)"
+        }
+      ],
+      "steps": [
+        {
+          "stepNumber": 1,
+          "badge": "STEP 1 OF 4 • ENERGIES & RAYLEIGH DISSIPATION",
+          "title": "Kinetic Energy $T$, Potential Energy $V$, and Dissipative Force $Q_y$",
+          "goal": "Express the total system kinetic energy $T$, potential energy $V$, and generalized dissipative force $Q_y$ in terms of minimal coordinate $y$ and velocity $\\dot{y}$.",
+          "intuition": "When mass 1 moves downward by $y$ with speed $\\dot{y}$, the pulley rotates at $\\dot{\\theta} = \\dot{y}/r$, and mass 2 moves upward at speed $\\dot{y}$. All three inertial bodies contribute to kinetic energy. The viscous drag opposes the rotation with generalized force $Q_y = -\\frac{\\partial \\mathcal{D}}{\\partial \\dot{y}}$.",
+          "conceptLinks": [
+            "kinetic-potential-energy",
+            "generalized-forces"
+          ],
+          "hint1": "Total kinetic energy is $T = \\frac{1}{2}m_1\\dot{y}^2 + \\frac{1}{2}m_2(-\\dot{y})^2 + \\frac{1}{2}I(\\dot{y}/r)^2 = \\frac{1}{2}(m_1 + m_2 + I/r^2)\\dot{y}^2$.",
+          "hint2": "Taking $y$ downward as positive, the gravitational potential energy is $V = -m_1 g y - m_2 g(L - y) = -(m_1 - m_2)gy + \\text{const}$. Rayleigh dissipation is $\\mathcal{D} = \\frac{1}{2}b\\dot{\\theta}^2 = \\frac{1}{2}(b/r^2)\\dot{y}^2$.",
+          "checkpoint": {
+            "question": "For $m_1 = 3\\text{ kg}, m_2 = 1\\text{ kg}, I/r^2 = 1\\text{ kg}, b/r^2 = 2\\text{ N}\\cdot\\text{s/m}$, and $g = 10\\text{ m/s}^2$, what are $T, V$, and $Q_y$?",
+            "options": [
+              "$T = \\frac{5}{2}\\dot{y}^2, \\quad V = -20y, \\quad Q_y = -2\\dot{y}$",
+              "$T = 2\\dot{y}^2, \\quad V = -40y, \\quad Q_y = -4\\dot{y}$",
+              "$T = \\frac{5}{2}\\dot{y}^2, \\quad V = +20y, \\quad Q_y = +2\\dot{y}$",
+              "$T = 3\\dot{y}^2, \\quad V = -20y, \\quad Q_y = -2\\dot{y}^2$"
+            ],
+            "correctIndex": 0,
+            "trapFeedback": [
+              "Correct! Equivalent mass $M_{\\text{eq}} = 3 + 1 + 1 = 5\\text{ kg}$, giving $T = \\frac{5}{2}\\dot{y}^2$. Gravitational gradient gives $\\partial V/\\partial y = -(m_1 - m_2)g = -20\\text{ N}$, and $Q_y = -(b/r^2)\\dot{y} = -2\\dot{y}$.",
+              "Did you forget the pulley inertia $I/r^2 = 1\\text{ kg}$ in $T$? Total mass is $3 + 1 + 1 = 5\\text{ kg}$, not 4 kg.",
+              "Watch potential energy sign: moving downward in the direction of gravity lowers potential energy, so $V = -m_1 g y$. Dissipation always opposes velocity, so $Q_y$ must be negative.",
+              "Viscous drag is linear in velocity: $Q_y = -b_{\\text{eq}}\\dot{y}$, not quadratic."
+            ]
+          },
+          "derivation": "### Step 1: Energy Formulations and Dissipation\n\nLet $y$ measure the downward displacement of mass 1 from the pulley axis. Since the cable length $L$ is fixed:\n$$y_1 = y, \\qquad y_2 = L - y, \\qquad \\theta = \\frac{y}{r}$$\n\nDifferentiating with respect to time:\n$$\\dot{y}_1 = \\dot{y}, \\qquad \\dot{y}_2 = -\\dot{y}, \\qquad \\dot{\\theta} = \\frac{\\dot{y}}{r}$$\n\n**1. Kinetic Energy $T$:**\n$$T = \\frac{1}{2}m_1\\dot{y}_1^2 + \\frac{1}{2}m_2\\dot{y}_2^2 + \\frac{1}{2}I\\dot{\\theta}^2 = \\frac{1}{2}\\left(m_1 + m_2 + \\frac{I}{r^2}\\right)\\dot{y}^2$$\nSubstituting numerical values $m_1 = 3, m_2 = 1, I/r^2 = 1$:\n$$M_{\\text{eq}} = 3 + 1 + 1 = 5\\text{ kg} \\implies T = \\frac{5}{2}\\dot{y}^2$$\n\n**2. Potential Energy $V$:**\nTaking the pulley center as the gravitational datum ($y=0$), with $y$ pointing downward:\n$$V = -m_1 g y_1 - m_2 g y_2 = -m_1 g y - m_2 g (L - y) = -(m_1 - m_2)g y - m_2 g L$$\nDropping the arbitrary constant datum $-m_2 g L$:\n$$V(y) = -(3 - 1)(10)y = -20y\\text{ J}$$\n\n**3. Rayleigh Dissipation and Generalized Force $Q_y$:**\nThe bearing viscous dissipation function is:\n$$\\mathcal{D} = \\frac{1}{2}b\\dot{\\theta}^2 = \\frac{1}{2}b\\left(\\frac{\\dot{y}}{r}\\right)^2 = \\frac{1}{2}\\left(\\frac{b}{r^2}\\right)\\dot{y}^2 = \\frac{1}{2}(2)\\dot{y}^2 = \\dot{y}^2$$\nThe generalized non-conservative dissipative force is:\n$$Q_y = -\\frac{\\partial \\mathcal{D}}{\\partial \\dot{y}} = -2\\dot{y}\\text{ N}$$"
+        },
+        {
+          "stepNumber": 2,
+          "badge": "STEP 2 OF 4 • EQUATION OF MOTION",
+          "title": "Lagrange's Equation of Motion for the Atwood Machine",
+          "goal": "Apply Lagrange's equation $\\frac{d}{dt}\\left(\\frac{\\partial T}{\\partial \\dot{y}}\\right) - \\frac{\\partial T}{\\partial y} + \\frac{\\partial V}{\\partial y} = Q_y$ to formulate the single governing second-order ODE.",
+          "intuition": "The net downward gravity force on mass 1 exceeds mass 2 by $(m_1 - m_2)g = 20\\text{ N}$. This driving force must accelerate the entire effective mass ($5\\text{ kg}$) and overcome the bearing damping force ($2\\dot{y}$).",
+          "conceptLinks": [
+            "manipulator-equation",
+            "generalized-forces"
+          ],
+          "hint1": "Compute $\\frac{\\partial T}{\\partial \\dot{y}} = 5\\dot{y}$, its time derivative $5\\ddot{y}$, and $\\frac{\\partial V}{\\partial y} = -20$.",
+          "hint2": "Equating to $Q_y = -2\\dot{y}$ gives $5\\ddot{y} - 20 = -2\\dot{y} \\implies 5\\ddot{y} + 2\\dot{y} = 20$.",
+          "checkpoint": {
+            "question": "What is the simplified governing equation of motion in terms of $y, \\dot{y}, \\ddot{y}$?",
+            "options": [
+              "$5\\ddot{y} + 2\\dot{y} + 20y = 0$",
+              "$4\\ddot{y} + 2\\dot{y} = 20$",
+              "$5\\ddot{y} + 2\\dot{y} = 20$",
+              "$5\\ddot{y} - 2\\dot{y} = 20$"
+            ],
+            "correctIndex": 2,
+            "trapFeedback": [
+              "Gravity provides a constant force term $20\\text{ N}$, not a position-dependent spring restoring force $20y$.",
+              "Check total mass: $m_1 + m_2 + I/r^2 = 3 + 1 + 1 = 5\\text{ kg}$, not 4 kg.",
+              "Correct! $5\\ddot{y} + 2\\dot{y} = 20$, or in standard form $\\ddot{y} + 0.4\\dot{y} = 4$.",
+              "The damping force resists motion, so moving it to the left-hand side gives a positive coefficient $+2\\dot{y}$."
+            ]
+          },
+          "derivation": "### Step 2: Formulation of the Equation of Motion\n\nWe evaluate each term in Lagrange's equation:\n$$\\frac{d}{dt}\\left(\\frac{\\partial T}{\\partial \\dot{y}}\\right) - \\frac{\\partial T}{\\partial y} + \\frac{\\partial V}{\\partial y} = Q_y$$\n\n**1. Kinetic Energy Derivatives:**\n$$\\frac{\\partial T}{\\partial \\dot{y}} = 5\\dot{y} \\implies \\frac{d}{dt}\\left(\\frac{\\partial T}{\\partial \\dot{y}}\\right) = 5\\ddot{y}$$\n$$\\frac{\\partial T}{\\partial y} = 0$$\n\n**2. Potential Energy Derivative:**\n$$\\frac{\\partial V}{\\partial y} = \\frac{\\partial}{\\partial y}(-20y) = -20$$\n\n**3. Assemble EOM:**\n$$5\\ddot{y} - 0 + (-20) = -2\\dot{y}$$\n$$5\\ddot{y} + 2\\dot{y} = 20$$\n\nDividing by the equivalent mass $M_{\\text{eq}} = 5\\text{ kg}$:\n$$\\ddot{y} + 0.4\\dot{y} = 4$$\n\nThis is a linear non-homogeneous first-order ODE in the velocity variable $v = \\dot{y}$."
+        },
+        {
+          "stepNumber": 3,
+          "badge": "STEP 3 OF 4 • TERMINAL VELOCITY & RESPONSE",
+          "title": "Analytical Velocity Solution and Terminal Speed",
+          "goal": "Solve the first-order differential equation for $\\dot{y}(t)$ with initial condition $\\dot{y}(0) = 0$ and find the terminal velocity $\\dot{y}_{\\text{term}}$ as $t \\to \\infty$.",
+          "intuition": "As the system accelerates downward, the viscous bearing drag $2\\dot{y}$ increases until it exactly balances the net gravitational driving force of $20\\text{ N}$. At this dynamic equilibrium, the acceleration vanishes ($ddot{y} = 0$), and the system descends at constant terminal speed.",
+          "conceptLinks": [
+            "manipulator-equation",
+            "generalized-coordinates"
+          ],
+          "hint1": "At terminal velocity, set $\\ddot{y} = 0$: $2\\dot{y}_{\\text{term}} = 20 \\implies \\dot{y}_{\\text{term}} = 10\\text{ m/s}$.",
+          "hint2": "The general solution to $\\dot{v} + 0.4v = 4$ is $v(t) = v_{\\text{term}} + C e^{-0.4 t}$. Use $v(0) = 0$ to find $C = -10$.",
+          "checkpoint": {
+            "question": "What are the terminal velocity $\\dot{y}_{\\text{term}}$ and the velocity response $\\dot{y}(t)$ from rest?",
+            "options": [
+              "$\\dot{y}_{\\text{term}} = 4.0\\text{ m/s}, \\quad \\dot{y}(t) = 4(1 - e^{-0.4 t})$",
+              "$\\dot{y}_{\\text{term}} = 10.0\\text{ m/s}, \\quad \\dot{y}(t) = 10(1 - e^{-0.4 t})\\text{ m/s}$",
+              "$\\dot{y}_{\\text{term}} = 20.0\\text{ m/s}, \\quad \\dot{y}(t) = 20(1 - e^{-0.2 t})$",
+              "$\\dot{y}_{\\text{term}} = 5.0\\text{ m/s}, \\quad \\dot{y}(t) = 5 - 5e^{-2 t}$"
+            ],
+            "correctIndex": 1,
+            "trapFeedback": [
+              "Did you divide 4 by 1 instead of 0.4? $\\dot{y}_{\\text{term}} = 4 / 0.4 = 10.0\\text{ m/s}$.",
+              "Correct! $\\dot{y}_{\\text{term}} = 20/2 = 10.0\\text{ m/s}$, and $\\dot{y}(t) = 10(1 - e^{-0.4 t})\\text{ m/s}$.",
+              "Terminal velocity is $20/2 = 10\\text{ m/s}$, not $20\\text{ m/s}$.",
+              "Check the time constant: $\\tau = 1/0.4 = 2.5\\text{ s}$, corresponding to exponent $-0.4 t$."
+            ]
+          },
+          "derivation": "### Step 3: Velocity Solution and Steady-State Terminal Speed\n\nLet $v(t) = \\dot{y}(t)$. The equation of motion is:\n$$\\dot{v}(t) + 0.4 v(t) = 4$$\n\n**1. Terminal Velocity ($t \\to \\infty$):**\nAt steady state, the acceleration vanishes: $\\dot{v} = 0$:\n$$0.4 v_{\\text{term}} = 4 \\implies v_{\\text{term}} = \\frac{4}{0.4} = 10.0\\text{ m/s}$$\nPhysically, the drag force $b_{\\text{eq}} v_{\\text{term}} = 2(10) = 20\\text{ N}$ exactly balances the net gravity force $(m_1 - m_2)g = (3 - 1)(10) = 20\\text{ N}$.\n\n**2. Time-Domain Response:**\nThe complementary solution is $v_c(t) = C e^{-0.4 t}$, and the particular solution is $v_p = 10.0\\text{ m/s}$:\n$$v(t) = 10 - C e^{-0.4 t}$$\nApplying the initial condition $v(0) = 0$:\n$$0 = 10 - C \\implies C = 10$$\n\nTherefore, the velocity function is:\n$$\\dot{y}(t) = 10\\left(1 - e^{-0.4 t}\\right)\\text{ m/s}$$\n\nThe time constant of the system is $\\tau = \\frac{1}{0.4} = 2.5\\text{ s}$. The system reaches $98\\%$ of its terminal velocity after $4\\tau = 10\\text{ s}$."
+        },
+        {
+          "stepNumber": 4,
+          "badge": "STEP 4 OF 4 • MAXIMAL DAE & CABLE TENSIONS (GRADUATE)",
+          "title": "Maximal Coordinates Formulation and Steady-State Cable Tensions",
+          "goal": "Formulate the 3-DOF unconstrained maximal coordinates system $\\mathbf{q} = [y_1, y_2, \\theta]^T$ with holonomic cable constraints, and solve for the steady-state cable tensions $\\lambda_1$ and $\\lambda_2$.",
+          "intuition": "In maximal coordinates, the two cable segments are treated as separate holonomic constraints $g_1 = y_1 - r\\theta = 0$ and $g_2 = y_2 + r\\theta - L = 0$. The Lagrange multipliers $\\lambda_1, \\lambda_2$ directly represent the internal cable tensions. At steady state, mass 1 moves downward at constant speed, so its cable tension must exactly balance its weight $m_1 g = 30\\text{ N}$, while mass 2's cable tension balances $m_2 g = 10\\text{ N}$. The difference $(30 - 10)r = 20r$ provides the torque that overcomes the bearing drag!",
+          "conceptLinks": [
+            "lagrange-multipliers",
+            "holonomic-constraints"
+          ],
+          "hint1": "The constraint Jacobian for $\\mathbf{q} = [y_1, y_2, \\theta]^T$ is $\\mathbf{J} = \\begin{bmatrix} 1 & 0 & -r \\\\ 0 & 1 & r \\end{bmatrix}$.",
+          "hint2": "Newton's second law on each mass at constant speed ($\\ddot{y}_1 = \\ddot{y}_2 = 0$) gives $m_1 g - T_1 = 0 \\implies T_1 = 30\\text{ N}$, and $T_2 - m_2 g = 0 \\implies T_2 = 10\\text{ N}$.",
+          "checkpoint": {
+            "question": "At steady state (terminal speed $\\dot{y} = 10\\text{ m/s}, \\ddot{y} = 0$), what are the tensions $T_1$ (left cable) and $T_2$ (right cable)?",
+            "options": [
+              "$T_1 = 20\\text{ N}, \\quad T_2 = 20\\text{ N}$",
+              "$T_1 = 15\\text{ N}, \\quad T_2 = 25\\text{ N}$",
+              "$T_1 = 35\\text{ N}, \\quad T_2 = 5\\text{ N}$",
+              "$T_1 = 30\\text{ N}, \\quad T_2 = 10\\text{ N}$"
+            ],
+            "correctIndex": 3,
+            "trapFeedback": [
+              "If $T_1 = T_2 = 20\\text{ N}$, there would be no net torque on the pulley to overcome bearing drag, and mass 1 ($30\\text{ N}$) would accelerate downward.",
+              "At constant speed, the forces on each suspended mass must sum to zero: $T_1 = m_1 g$ and $T_2 = m_2 g$.",
+              "This would imply an acceleration of the masses, violating the steady-state condition $\\ddot{y} = 0$.",
+              "Correct! At terminal velocity $\\ddot{y}_1 = 0 \\implies T_1 = m_1 g = 3(10) = 30\\text{ N}$, and $\\ddot{y}_2 = 0 \\implies T_2 = m_2 g = 1(10) = 10\\text{ N}$. The tension difference $(T_1 - T_2)r = (30-10)r = 20r$ perfectly balances the drag torque $\\tau_{\\text{drag}} = b\\dot{\\theta} = (2 r^2)(10/r) = 20r\\text{ N}\\cdot\\text{m}$!"
+            ]
+          },
+          "derivation": "### Step 4: Maximal DAE Formulation and Cable Tensions (Graduate)\n\nLet $\\mathbf{q} = [y_1, y_2, \\theta]^T$. The unconstrained mass matrix and applied forces are:\n$$\\mathbf{M} = \\begin{bmatrix} m_1 & 0 & 0 \\\\ 0 & m_2 & 0 \\\\ 0 & 0 & I \\end{bmatrix} = \\begin{bmatrix} 3 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & I \\end{bmatrix}$$\n$$\\mathbf{f} = \\begin{bmatrix} m_1 g \\\\ m_2 g \\\\ -b\\dot{\\theta} \\end{bmatrix} = \\begin{bmatrix} 30 \\\\ 10 \\\\ -b\\dot{\\theta} \\end{bmatrix}$$\n*(Note: $y_1$ and $y_2$ both measure downward displacement from the axle).*\n\n**1. Constraint Equations:**\nFor inextensible cables wrapped without slipping:\n$$g_1(\\mathbf{q}) = y_1 - r\\theta = 0$$\n$$g_2(\\mathbf{q}) = y_2 + r\\theta - L = 0$$\n$$\\mathbf{J} = \\begin{bmatrix} \\frac{\\partial g_1}{\\partial \\mathbf{q}} \\\\ \\frac{\\partial g_2}{\\partial \\mathbf{q}} \\end{bmatrix} = \\begin{bmatrix} 1 & 0 & -r \\\\ 0 & 1 & r \\end{bmatrix}$$\n\n**2. Constrained Equations of Motion:**\n$$\\mathbf{M}\\ddot{\\mathbf{q}} - \\mathbf{J}^T\\boldsymbol{\\lambda} = \\mathbf{f} \\implies \\begin{bmatrix} m_1 \\ddot{y}_1 \\\\ m_2 \\ddot{y}_2 \\\\ I \\ddot{\\theta} \\end{bmatrix} - \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\\\ -r & r \\end{bmatrix} \\begin{bmatrix} \\lambda_1 \\\\ \\lambda_2 \\end{bmatrix} = \\begin{bmatrix} m_1 g \\\\ m_2 g \\\\ -b\\dot{\\theta} \\end{bmatrix}$$\n\nExpanding line-by-line:\n$$m_1 \\ddot{y}_1 = m_1 g + \\lambda_1$$\n$$m_2 \\ddot{y}_2 = m_2 g + \\lambda_2$$\n$$I \\ddot{\\theta} = -b\\dot{\\theta} - r\\lambda_1 + r\\lambda_2$$\n\nHere, the physical upward cable tensions are $T_1 = -\\lambda_1$ and $T_2 = -\\lambda_2$:\n$$m_1 \\ddot{y}_1 = m_1 g - T_1$$\n$$m_2 \\ddot{y}_2 = m_2 g - T_2$$\n$$I \\ddot{\\theta} = r(T_1 - T_2) - b\\dot{\\theta}$$\n\n**3. Steady-State Evaluation (Terminal Velocity):**\nAt steady state, $\\ddot{y}_1 = \\ddot{y}_2 = \\ddot{\\theta} = 0$, and $\\dot{\\theta} = \\frac{v_{\\text{term}}}{r} = \\frac{10}{r}$:\n$$0 = m_1 g - T_1 \\implies T_1 = m_1 g = 3(10) = 30.0\\text{ N}$$\n$$0 = m_2 g - T_2 \\implies T_2 = m_2 g = 1(10) = 10.0\\text{ N}$$\n\nCheck the pulley rotational balance:\n$$r(T_1 - T_2) - b\\dot{\\theta} = r(30 - 10) - b\\left(\\frac{10}{r}\\right) = 20r - \\left(\\frac{b}{r^2}\\right)(10)r = 20r - 2(10)r = 0 \\quad \\checkmark$$\nBoth cable tensions are in positive tension ($T_1 = 30\\text{ N}, T_2 = 10\\text{ N}$), confirming the cable never goes slack during steady-state descent."
+        }
+      ],
+      "finalAnswer": {
+        "summaryTitle": "Complete Verified Solution — Practice Exam E Problem 2 (Atwood Machine with Drag)",
+        "items": [
+          {
+            "label": "(a) Energies & Dissipation (Minimal Coordinate $y$)",
+            "math": "$$T = \\frac{5}{2}\\dot{y}^2, \\qquad V = -20y, \\qquad Q_y = -2\\dot{y}$$"
+          },
+          {
+            "label": "(b) Equation of Motion",
+            "math": "$$5\\ddot{y} + 2\\dot{y} = 20 \\implies \\ddot{y} + 0.4\\dot{y} = 4$$"
+          },
+          {
+            "label": "(c) Velocity Response & Terminal Speed",
+            "math": "$$\\dot{y}_{\\text{term}} = 10.0\\text{ m/s}, \\qquad \\dot{y}(t) = 10\\left(1 - e^{-0.4 t}\\right)\\text{ m/s}$$"
+          },
+          {
+            "label": "(d) Graduate Part: Steady-State Cable Tensions",
+            "math": "$$T_1 = 30.0\\text{ N}, \\qquad T_2 = 10.0\\text{ N}, \\qquad \\Delta T = T_1 - T_2 = 20.0\\text{ N}$$"
+          }
+        ]
+      }
+    },
+    {
+      "id": "practice-e-3",
+      "code": "PRACTICE EXAM E • PROBLEM 3",
+      "shortTitle": "Ball Impacting Rigid Circular Dome (Impact Map & Energy Loss)",
+      "title": "Planar Ball Impacting a Circular Dome (Contact Guard, Impact Map & Tangential Slip)",
+      "subtitle": "Unilateral Guard Function h(q), Normal Collision Velocity, Block Impact Map DAE, Restitution e = 0.50 & Energy Dissipation",
+      "category": "Contact & Impacts",
+      "badgeClass": "badge-amber",
+      "difficulty": "Advanced",
+      "estimatedTime": "25 mins",
+      "estimatedMinutes": 25,
+      "matchedLectures": "Lec 20–22",
+      "lectureRefs": [
+        {
+          "code": "Lec 20",
+          "title": "Unilateral Constraints & Contact Detection",
+          "time": "16:45"
+        },
+        {
+          "code": "Lec 21",
+          "title": "Impulsive Dynamics & Restitution Models",
+          "time": "24:10"
+        },
+        {
+          "code": "Lec 22",
+          "title": "Block Impact Map DAE & Kinetic Energy Jump",
+          "time": "31:20"
+        }
+      ],
+      "svgDiagram": "<svg viewBox=\"0 0 460 300\" width=\"100%\" height=\"230\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <marker id=\"arrow-blue\" viewBox=\"0 0 10 10\" refX=\"6\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">\n      <path d=\"M 0 1 L 10 5 L 0 9 z\" fill=\"#2563eb\" />\n    </marker>\n    <marker id=\"arrow-green\" viewBox=\"0 0 10 10\" refX=\"6\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">\n      <path d=\"M 0 1 L 10 5 L 0 9 z\" fill=\"#059669\" />\n    </marker>\n  </defs>\n\n  <!-- Ground Line -->\n  <line x1=\"20\" y1=\"260\" x2=\"440\" y2=\"260\" stroke=\"#475569\" stroke-width=\"2.5\" />\n\n  <!-- Circular Dome (R = 5 m scaled: R = 180 px, center at x=120, y=260) -->\n  <path d=\"M 120 80 A 180 180 0 0 1 300 260 L 120 260 Z\" fill=\"#e2e8f0\" stroke=\"#334155\" stroke-width=\"3\" />\n  <circle cx=\"120\" cy=\"260\" r=\"4\" fill=\"#0f172a\" />\n  <text x=\"105\" y=\"278\" font-size=\"11\" font-weight=\"700\" fill=\"#0f172a\">(0,0)</text>\n\n  <!-- Impact Point (3, 4) scaled: dx = 3/5 * 180 = 108, dy = 4/5 * 180 = 144 -> cx = 228, cy = 116 -->\n  <circle cx=\"228\" cy=\"116\" r=\"6\" fill=\"#dc2626\" />\n  <text x=\"240\" y=\"114\" font-size=\"11\" font-weight=\"800\" fill=\"#dc2626\">Impact (3, 4) m</text>\n\n  <!-- Normal vector n = [0.6, 0.8] outward -->\n  <line x1=\"228\" y1=\"116\" x2=\"276\" y2=\"52\" stroke=\"#2563eb\" stroke-width=\"2.5\" marker-end=\"url(#arrow-blue)\" />\n  <text x=\"282\" y=\"60\" font-size=\"11\" font-weight=\"800\" fill=\"#2563eb\">n̂ = [0.6, 0.8]ᵀ</text>\n\n  <!-- Tangent vector t = [-0.8, 0.6] -->\n  <line x1=\"228\" y1=\"116\" x2=\"172\" y2=\"74\" stroke=\"#059669\" stroke-width=\"2\" stroke-dasharray=\"4,2\" marker-end=\"url(#arrow-green)\" />\n  <text x=\"130\" y=\"70\" font-size=\"11\" font-weight=\"700\" fill=\"#059669\">t̂ = [-0.8, 0.6]ᵀ</text>\n\n  <!-- Falling Ball before impact -->\n  <circle cx=\"228\" cy=\"60\" r=\"12\" fill=\"#ef4444\" stroke=\"#991b1b\" stroke-width=\"2\" />\n  <line x1=\"228\" y1=\"72\" x2=\"228\" y2=\"105\" stroke=\"#dc2626\" stroke-width=\"2.5\" marker-end=\"url(#arrow-blue)\" />\n  <text x=\"180\" y=\"88\" font-size=\"11\" font-weight=\"800\" fill=\"#dc2626\">q̇⁻ = [0, -5]ᵀ</text>\n\n  <!-- Parameters Card -->\n  <rect x=\"20\" y=\"25\" width=\"130\" height=\"85\" rx=\"5\" fill=\"#f8fafc\" stroke=\"#cbd5e1\" stroke-width=\"1\" />\n  <text x=\"28\" y=\"42\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">Collision Data:</text>\n  <text x=\"28\" y=\"57\" font-size=\"9\" fill=\"#475569\">Mass m = 1 kg</text>\n  <text x=\"28\" y=\"71\" font-size=\"9\" fill=\"#475569\">Dome R = 5 m</text>\n  <text x=\"28\" y=\"85\" font-size=\"9\" fill=\"#475569\">Restitution e = 0.50</text>\n  <text x=\"28\" y=\"99\" font-size=\"9\" font-weight=\"700\" fill=\"#2563eb\">h(q) = √(x²+y²) - 5</text>\n</svg>",
+      "prompt": "A point-mass ball of mass $m = 1\\text{ kg}$ falls vertically downward with pre-impact velocity $\\dot{\\mathbf{q}}^- = [0, -5]^T\\text{ m/s}$ onto a frictionless rigid circular dome of radius $R = 5\\text{ m}$ centered at $(0,0)$. Impact occurs at coordinates $(x, y) = (3, 4)\\text{ m}$. With coefficient of restitution $e = 0.50$: (a) write the guard function $h(\\mathbf{q})$ and calculate normal approach rate $\\dot{h}^-$; (b) formulate the block impact map DAE; (c) calculate the normal impulsive contact force $\\Lambda_N$ and post-impact velocities $\\dot{\\mathbf{q}}^+$; and (d) (Graduate Part) compute the kinetic energy lost during collision $\\Delta T$ and verify tangential momentum conservation.",
+      "goalStatement": "Formulate the unilateral contact guard, assemble the block impact DAE, calculate post-impact velocities and normal impulse, and verify energy loss and tangential velocity conservation.",
+      "parameters": [
+        {
+          "symbol": "m",
+          "desc": "Ball mass (1 kg)"
+        },
+        {
+          "symbol": "R",
+          "desc": "Circular dome radius (5 m)"
+        },
+        {
+          "symbol": "\\mathbf{q}_c",
+          "desc": "Impact contact location ([3, 4]ᵀ m)"
+        },
+        {
+          "symbol": "\\dot{\\mathbf{q}}^-",
+          "desc": "Pre-impact incoming velocity vector ([0, -5]ᵀ m/s)"
+        },
+        {
+          "symbol": "e",
+          "desc": "Newtonian coefficient of restitution (0.50)"
+        }
+      ],
+      "steps": [
+        {
+          "stepNumber": 1,
+          "badge": "STEP 1 OF 4 • CONTACT GUARD & APPROACH VELOCITY",
+          "title": "Unilateral Guard Function $h(\\mathbf{q})$ and Normal Approach Speed $\\dot{h}^-$",
+          "goal": "Define the algebraic guard function $h(\\mathbf{q}) \\ge 0$ characterizing the allowable airspace above the dome, compute its normal Jacobian $\\mathbf{J}_N$, and evaluate the incoming normal collision speed $\\dot{h}^-$.",
+          "intuition": "The dome boundary is the circle $x^2 + y^2 = R^2 = 25$. For the ball outside the dome, $\\sqrt{x^2+y^2} \\ge 5$. The unit normal pointing out of the surface is $\\mathbf{n} = [x/R, y/R]^T = [0.6, 0.8]^T$. Taking the dot product with the velocity vector gives the rate of change of clearance $\\dot{h}^-$. If $\\dot{h}^- < 0$, the body is approaching the surface and an impact occurs.",
+          "conceptLinks": [
+            "unilateral-hybrid-systems",
+            "constraint-jacobian"
+          ],
+          "hint1": "Guard function $h(\\mathbf{q}) = \\sqrt{x^2 + y^2} - 5$. Its gradient is $\\mathbf{J}_N = [x/\\sqrt{x^2+y^2}, y/\\sqrt{x^2+y^2}]$.",
+          "hint2": "At $(3, 4)$, $\\mathbf{J}_N = [3/5, 4/5] = [0.6, 0.8]$. The approach velocity is $\\dot{h}^- = \\mathbf{J}_N \\dot{\\mathbf{q}}^- = 0.6(0) + 0.8(-5) = -4.0\\text{ m/s}$.",
+          "checkpoint": {
+            "question": "What are the unit outward normal Jacobian $\\mathbf{J}_N$ at $(3, 4)$ and the normal approach velocity $\\dot{h}^-$?",
+            "options": [
+              "$\\mathbf{J}_N = [0.8, 0.6], \\quad \\dot{h}^- = -3.0\\text{ m/s}$",
+              "$\\mathbf{J}_N = [3, 4], \\quad \\dot{h}^- = -20.0\\text{ m/s}$",
+              "$\\mathbf{J}_N = [0.6, 0.8], \\quad \\dot{h}^- = -4.0\\text{ m/s}$",
+              "$\\mathbf{J}_N = [0.6, -0.8], \\quad \\dot{h}^- = +4.0\\text{ m/s}$"
+            ],
+            "correctIndex": 2,
+            "trapFeedback": [
+              "You swapped $x$ and $y$: $\\partial h/\\partial x = x/R = 3/5 = 0.6$ and $\\partial h/\\partial y = y/R = 4/5 = 0.8$.",
+              "Jacobian must be normalized into a unit normal vector ($[3/5, 4/5]$) so that $\\dot{h}$ has units of physical velocity.",
+              "Correct! $\\mathbf{J}_N = [0.6, 0.8]$ and $\\dot{h}^- = [0.6, 0.8][0, -5]^T = -4.0\\text{ m/s} < 0$, confirming incoming collision.",
+              "The outward normal from the dome center $(0,0)$ through $(3,4)$ has positive components in both $+x$ and $+y$."
+            ]
+          },
+          "derivation": "### Step 1: Guard Function and Impact Condition\n\nThe ball moves in the $xy$-plane above a rigid circular dome of radius $R = 5\\text{ m}$. The unilateral non-penetration condition is:\n$$h(\\mathbf{q}) = \\sqrt{x^2 + y^2} - R \\ge 0$$\n\nContact occurs on the switching surface (guard) $h(\\mathbf{q}) = 0$:\n$$h(3, 4) = \\sqrt{3^2 + 4^2} - 5 = \\sqrt{25} - 5 = 0\\text{ m} \\quad \\checkmark$$\n\nThe unit outward normal vector is the configuration gradient of the guard:\n$$\\mathbf{J}_N(\\mathbf{q}) = \\nabla h(\\mathbf{q}) = \\begin{bmatrix} \\frac{\\partial h}{\\partial x} & \\frac{\\partial h}{\\partial y} \\end{bmatrix} = \\begin{bmatrix} \\frac{x}{\\sqrt{x^2+y^2}} & \\frac{y}{\\sqrt{x^2+y^2}} \\end{bmatrix}$$\n\nEvaluating at $(x, y) = (3, 4)\\text{ m}$:\n$$\\mathbf{J}_N = \\begin{bmatrix} \\frac{3}{5} & \\frac{4}{5} \\end{bmatrix} = \\begin{bmatrix} 0.6 & 0.8 \\end{bmatrix}$$\n\nThe pre-impact normal velocity (approach rate) is:\n$$\\dot{h}^- = \\mathbf{J}_N \\dot{\\mathbf{q}}^- = \\begin{bmatrix} 0.6 & 0.8 \\end{bmatrix} \\begin{bmatrix} 0 \\\\ -5 \\end{bmatrix} = 0.6(0) + 0.8(-5) = -4.0\\text{ m/s}$$\n\nBecause $\\dot{h}^- = -4.0\\text{ m/s} < 0$, the mass is actively penetrating the boundary, triggering the impulsive restitution impact map."
+        },
+        {
+          "stepNumber": 2,
+          "badge": "STEP 2 OF 4 • BLOCK IMPACT MAP DAE",
+          "title": "Assembly of the $3\\times 3$ Saddle-Point Impact Matrix",
+          "goal": "Assemble the block impact map DAE relating post-impact velocities $\\dot{\\mathbf{q}}^+$ and normal contact impulse $\\Lambda_N$ to pre-impact momentum and the restitution law.",
+          "intuition": "During an infinitesimal impact duration $\\Delta t \\to 0$, finite forces like gravity are negligible compared to the infinite contact impulse. The integrated momentum balance is $\\mathbf{M}(\\dot{\\mathbf{q}}^+ - \\dot{\\mathbf{q}}^-) = \\mathbf{J}_N^T\\Lambda_N$. Combined with Poisson/Newton's restitution law $\\mathbf{J}_N\\dot{\\mathbf{q}}^+ = -e\\mathbf{J}_N\\dot{\\mathbf{q}}^-$, this forms a linear saddle-point system.",
+          "conceptLinks": [
+            "impact-maps",
+            "lagrange-multipliers"
+          ],
+          "hint1": "The block matrix structure is $\\begin{bmatrix} \\mathbf{M} & -\\mathbf{J}_N^T \\\\ \\mathbf{J}_N & 0 \\end{bmatrix} \\begin{bmatrix} \\dot{\\mathbf{q}}^+ \\\\ \\Lambda_N \\end{bmatrix} = \\begin{bmatrix} \\mathbf{M}\\dot{\\mathbf{q}}^- \\\\ -e\\dot{h}^- \\end{bmatrix}$.",
+          "hint2": "Here $\\mathbf{M} = \\mathbf{I}_{2\\times 2}, \\mathbf{M}\\dot{\\mathbf{q}}^- = [0, -5]^T$, and $-e\\dot{h}^- = -(0.50)(-4.0) = +2.0\\text{ m/s}$.",
+          "checkpoint": {
+            "question": "What is the complete numerical block impact matrix equation for this collision?",
+            "options": [
+              "$\\begin{bmatrix} 1 & 0 & -0.6 \\\\ 0 & 1 & -0.8 \\\\ 0.6 & 0.8 & 0 \\end{bmatrix} \\begin{bmatrix} \\dot{x}^+ \\\\ \\dot{y}^+ \\\\ \\Lambda_N \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -5.0 \\\\ +2.0 \\end{bmatrix}$",
+              "$\\begin{bmatrix} 1 & 0 & 0.6 \\\\ 0 & 1 & 0.8 \\\\ 0.6 & 0.8 & 0 \\end{bmatrix} \\begin{bmatrix} \\dot{x}^+ \\\\ \\dot{y}^+ \\\\ \\Lambda_N \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -5.0 \\\\ -2.0 \\end{bmatrix}$",
+              "$\\begin{bmatrix} 1 & 0 & -0.6 \\\\ 0 & 1 & -0.8 \\\\ 0.6 & 0.8 & 1 \\end{bmatrix} \\begin{bmatrix} \\dot{x}^+ \\\\ \\dot{y}^+ \\\\ \\Lambda_N \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ 0 \\\\ +2.0 \\end{bmatrix}$",
+              "$\\begin{bmatrix} 5 & 0 & -3 \\\\ 0 & 5 & -4 \\\\ 3 & 4 & 0 \\end{bmatrix} \\begin{bmatrix} \\dot{x}^+ \\\\ \\dot{y}^+ \\\\ \\Lambda_N \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -25 \\\\ +10 \\end{bmatrix}$"
+            ],
+            "correctIndex": 0,
+            "trapFeedback": [
+              "Correct! Top block is $\\mathbf{M}\\dot{\\mathbf{q}}^+ - \\mathbf{J}_N^T\\Lambda_N = \\mathbf{M}\\dot{\\mathbf{q}}^- = [0, -5]^T$, and bottom row is $\\mathbf{J}_N\\dot{\\mathbf{q}}^+ = -e\\dot{h}^- = +2.0\\text{ m/s}$.",
+              "Watch the signs: Newton's second law has $-\\mathbf{J}_N^T\\Lambda_N$ on the LHS, and rebound velocity is positive: $-e\\dot{h}^- = -0.5(-4) = +2.0$.",
+              "The lower-right corner of the saddle-point matrix is strictly 0 because the constraint is instantaneous.",
+              "While scalar multiples can solve the system, the standard physical unit-normal formulation uses $\\mathbf{J}_N = [0.6, 0.8]$."
+            ]
+          },
+          "derivation": "### Step 2: Formulation of the Block Impact Map\n\nDuring the collision interval $[t^-, t^+]$, integrating Newton's second law over the impulse duration yields:\n$$\\int_{t^-}^{t^+} \\mathbf{M}\\ddot{\\mathbf{q}}\\,dt = \\int_{t^-}^{t^+} (\\mathbf{f}_{\\text{ext}} + \\mathbf{J}_N^T \\lambda)\\,dt$$\n\nSince external forces (such as gravity) are finite, $\\lim_{\\Delta t \\to 0} \\int_{t^-}^{t^+} \\mathbf{f}_{\\text{ext}}\\,dt = \\mathbf{0}$. Defining the normal contact impulse $\\Lambda_N = \\lim_{\\Delta t \\to 0} \\int_{t^-}^{t^+} \\lambda\\,dt$:\n$$\\mathbf{M}(\\dot{\\mathbf{q}}^+ - \\dot{\\mathbf{q}}^-) = \\mathbf{J}_N^T \\Lambda_N \\implies \\mathbf{M}\\dot{\\mathbf{q}}^+ - \\mathbf{J}_N^T \\Lambda_N = \\mathbf{M}\\dot{\\mathbf{q}}^-$$\n\nNewton's kinematic restitution law dictates that the post-impact normal separation velocity must satisfy:\n$$\\dot{h}^+ = -e \\dot{h}^- \\implies \\mathbf{J}_N \\dot{\\mathbf{q}}^+ = -e \\mathbf{J}_N \\dot{\\mathbf{q}}^-$$\n\nAssembling into the linear saddle-point system:\n$$\\begin{bmatrix} \\mathbf{M} & -\\mathbf{J}_N^T \\\\ \\mathbf{J}_N & 0 \\end{bmatrix} \\begin{bmatrix} \\dot{\\mathbf{q}}^+ \\\\ \\Lambda_N \\end{bmatrix} = \\begin{bmatrix} \\mathbf{M}\\dot{\\mathbf{q}}^- \\\\ -e\\dot{h}^- \\end{bmatrix}$$\n\nSubstituting $\\mathbf{M} = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$, $\\mathbf{J}_N = \\begin{bmatrix} 0.6 & 0.8 \\end{bmatrix}$, $\\dot{\\mathbf{q}}^- = \\begin{bmatrix} 0 \\\\ -5.0 \\end{bmatrix}$, and $-e\\dot{h}^- = -(0.50)(-4.0) = +2.0$:\n$$\\begin{bmatrix} 1 & 0 & -0.6 \\\\ 0 & 1 & -0.8 \\\\ 0.6 & 0.8 & 0 \\end{bmatrix} \\begin{bmatrix} \\dot{x}^+ \\\\ \\dot{y}^+ \\\\ \\Lambda_N \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -5.0 \\\\ +2.0 \\end{bmatrix}$$"
+        },
+        {
+          "stepNumber": 3,
+          "badge": "STEP 3 OF 4 • POST-IMPACT VELOCITIES & IMPULSE",
+          "title": "Exact Solution for Contact Impulse $\\Lambda_N$ and Post-Impact Velocity $\\dot{\\mathbf{q}}^+$",
+          "goal": "Calculate the Delassus scalar $G$, determine the normal impulse $\\Lambda_N$, and compute the post-impact velocity vector $\\dot{\\mathbf{q}}^+$.",
+          "intuition": "The Delassus mobility scalar $G = \\mathbf{J}_N \\mathbf{M}^{-1} \\mathbf{J}_N^T$ measures the effective inverse inertia felt along the surface normal. Here $G = 0.6^2 + 0.8^2 = 1.0\\text{ kg}^{-1}$. The impulse required to reverse the relative velocity from $-4.0\\text{ m/s}$ to $+2.0\\text{ m/s}$ (a total change of $6.0\\text{ m/s}$) for a $1\\text{ kg}$ mass is simply $\\Delta p = 6.0\\text{ N}\\cdot\\text{s}$.",
+          "conceptLinks": [
+            "impact-maps",
+            "constraint-jacobian"
+          ],
+          "hint1": "Delassus scalar $G = \\mathbf{J}_N \\mathbf{M}^{-1} \\mathbf{J}_N^T = 0.6^2 + 0.8^2 = 1.0$. The impulse is $\\Lambda_N = \\frac{-(1 + e)\\dot{h}^-}{G} = \\frac{-1.5(-4.0)}{1.0} = 6.0\\text{ N}\\cdot\\text{s}$.",
+          "hint2": "Post-impact velocity is $\\dot{\\mathbf{q}}^+ = \\dot{\\mathbf{q}}^- + \\mathbf{M}^{-1}\\mathbf{J}_N^T\\Lambda_N = [0, -5]^T + [0.6, 0.8]^T(6.0)$.",
+          "checkpoint": {
+            "question": "What are the exact normal contact impulse $\\Lambda_N$ and post-impact velocity vector $\\dot{\\mathbf{q}}^+$?",
+            "options": [
+              "$\\Lambda_N = 4.0\\text{ N}\\cdot\\text{s}, \\quad \\dot{\\mathbf{q}}^+ = [2.4, -1.8]^T\\text{ m/s}$",
+              "$\\Lambda_N = 6.0\\text{ N}\\cdot\\text{s}, \\quad \\dot{\\mathbf{q}}^+ = [3.6, -0.2]^T\\text{ m/s}$",
+              "$\\Lambda_N = 8.0\\text{ N}\\cdot\\text{s}, \\quad \\dot{\\mathbf{q}}^+ = [4.8, +1.4]^T\\text{ m/s}$",
+              "$\\Lambda_N = 2.0\\text{ N}\\cdot\\text{s}, \\quad \\dot{\\mathbf{q}}^+ = [1.2, -3.4]^T\\text{ m/s}$"
+            ],
+            "correctIndex": 1,
+            "trapFeedback": [
+              "This would correspond to plastic impact ($e=0$), where $\\Lambda_N = -\\dot{h}^- = 4.0\\text{ N}\\cdot\\text{s}$. For $e=0.50$, the impulse includes the restitution phase: $(1+e) = 1.5$.",
+              "Correct! $\\Lambda_N = 6.0\\text{ N}\\cdot\\text{s}$ and $\\dot{\\mathbf{q}}^+ = [0 + 0.6(6), -5 + 0.8(6)]^T = [3.6, -0.2]^T\\text{ m/s}$.",
+              "This would correspond to super-elastic restitution $e = 1.0$.",
+              "Check the restitution factor: $(1 + e) = 1 + 0.5 = 1.5$, not $0.5$."
+            ]
+          },
+          "derivation": "### Step 3: Analytical Solution for Impulse and Velocity\n\n**1. Delassus Operator / Effective Inverse Inertia:**\n$$G = \\mathbf{J}_N \\mathbf{M}^{-1} \\mathbf{J}_N^T = \\begin{bmatrix} 0.6 & 0.8 \\end{bmatrix} \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix} \\begin{bmatrix} 0.6 \\\\ 0.8 \\end{bmatrix} = 0.6^2 + 0.8^2 = 0.36 + 0.64 = 1.0\\text{ kg}^{-1}$$\n\n**2. Contact Normal Impulse $\\Lambda_N$:**\nSolving the block DAE for $\\Lambda_N$ via Schur complement:\n$$\\Lambda_N = \\frac{-(1 + e)\\mathbf{J}_N \\dot{\\mathbf{q}}^-}{G} = \\frac{-(1 + 0.50)(-4.0)}{1.0} = \\frac{-(1.5)(-4.0)}{1.0} = 6.0\\text{ N}\\cdot\\text{s}$$\n\n**3. Post-Impact Velocities $\\dot{\\mathbf{q}}^+$:**\n$$\\dot{\\mathbf{q}}^+ = \\dot{\\mathbf{q}}^- + \\mathbf{M}^{-1} \\mathbf{J}_N^T \\Lambda_N = \\begin{bmatrix} 0 \\\\ -5.0 \\end{bmatrix} + \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix} \\begin{bmatrix} 0.6 \\\\ 0.8 \\end{bmatrix} (6.0)$$\n$$\\dot{\\mathbf{q}}^+ = \\begin{bmatrix} 0 \\\\ -5.0 \\end{bmatrix} + \\begin{bmatrix} 3.6 \\\\ 4.8 \\end{bmatrix} = \\begin{bmatrix} 3.6 \\\\ -0.2 \\end{bmatrix}\\text{ m/s}$$\n\n**4. Verification of Restitution:**\n$$\\dot{h}^+ = \\mathbf{J}_N \\dot{\\mathbf{q}}^+ = \\begin{bmatrix} 0.6 & 0.8 \\end{bmatrix} \\begin{bmatrix} 3.6 \\\\ -0.2 \\end{bmatrix} = 0.6(3.6) + 0.8(-0.2) = 2.16 - 0.16 = +2.0\\text{ m/s}$$\n$$-e\\dot{h}^- = -0.50(-4.0) = +2.0\\text{ m/s} \\quad \\checkmark$$\nThe post-impact velocity matches the restitution condition perfectly!"
+        },
+        {
+          "stepNumber": 4,
+          "badge": "STEP 4 OF 4 • ENERGY DISSIPATION & TANGENTIAL MOMENTUM (GRADUATE)",
+          "title": "Kinetic Energy Loss $\\Delta T$ and Tangential Velocity Invariance",
+          "goal": "Calculate pre-impact and post-impact kinetic energies to determine energy lost $\\Delta T$, and verify that tangential momentum is conserved along the dome surface.",
+          "intuition": "Because the dome surface is frictionless, the contact impulse acts purely along the surface normal $\\mathbf{n}$. The component of velocity parallel to the tangent vector $\\mathbf{t} = [-0.8, 0.6]^T$ must be completely unaffected ($v_t^+ = v_t^-$). The loss in kinetic energy occurs exclusively along the normal direction: $\\Delta T = \\frac{1}{2}m(1 - e^2)(\\dot{h}^-)^2$.",
+          "conceptLinks": [
+            "unilateral-hybrid-systems",
+            "kinetic-potential-energy"
+          ],
+          "hint1": "$T^- = \\frac{1}{2}m(0^2 + (-5)^2) = 12.5\\text{ J}$. Compute $T^+ = \\frac{1}{2}m(3.6^2 + (-0.2)^2)$.",
+          "hint2": "$3.6^2 + (-0.2)^2 = 12.96 + 0.04 = 13.0$, so $T^+ = 6.5\\text{ J}$. Loss is $\\Delta T = 12.5 - 6.5 = 6.0\\text{ J}$. Tangential vector is $\\hat{\\mathbf{t}} = [-0.8, 0.6]^T$.",
+          "checkpoint": {
+            "question": "What are the kinetic energy loss $\\Delta T$ and pre/post tangential velocities $v_t^-, v_t^+$ along $\\hat{\\mathbf{t}} = [-0.8, 0.6]^T$?",
+            "options": [
+              "$\\Delta T = 3.0\\text{ J}, \\quad v_t^- = 0, \\quad v_t^+ = 3.0\\text{ m/s}$",
+              "$\\Delta T = 6.0\\text{ J}, \\quad v_t^- = -3.0\\text{ m/s}, \\quad v_t^+ = -3.0\\text{ m/s}$ (conserved!)",
+              "$\\Delta T = 12.5\\text{ J}, \\quad v_t^- = -4.0\\text{ m/s}, \\quad v_t^+ = -2.0\\text{ m/s}$",
+              "$\\Delta T = 0.0\\text{ J}, \\quad v_t^- = -5.0\\text{ m/s}, \\quad v_t^+ = -5.0\\text{ m/s}$"
+            ],
+            "correctIndex": 1,
+            "trapFeedback": [
+              "Check kinetic energy arithmetic: $T^- = 12.5\\text{ J}$ and $T^+ = 6.5\\text{ J}$, giving $\\Delta T = 6.0\\text{ J}$. Tangential velocity is non-zero because the normal is tilted.",
+              "Correct! $\\Delta T = 12.5 - 6.5 = 6.0\\text{ J}$. Tangential velocity $v_t = [-0.8, 0.6] \\cdot [0, -5]^T = -3.0\\text{ m/s}$ and $[-0.8, 0.6] \\cdot [3.6, -0.2]^T = -2.88 - 0.12 = -3.0\\text{ m/s}$, proving frictionless slip!",
+              "Total kinetic energy is not completely lost because restitution is $e=0.50$ (not $0$) and tangential motion is undamped.",
+              "Kinetic energy is conserved only for perfectly elastic collisions ($e=1.0$). For $e=0.50$, energy must decrease."
+            ]
+          },
+          "derivation": "### Step 4: Kinetic Energy Loss and Tangential Conservation (Graduate)\n\n**1. Kinetic Energy Analysis:**\nPre-impact kinetic energy:\n$$T^- = \\frac{1}{2}m\\|\\dot{\\mathbf{q}}^-\\|^2 = \\frac{1}{2}(1.0)\\left(0^2 + (-5.0)^2\\right) = \\frac{1}{2}(25.0) = 12.5\\text{ J}$$\n\nPost-impact kinetic energy:\n$$T^+ = \\frac{1}{2}m\\|\\dot{\\mathbf{q}}^+\\|^2 = \\frac{1}{2}(1.0)\\left(3.6^2 + (-0.2)^2\\right) = \\frac{1}{2}(12.96 + 0.04) = \\frac{1}{2}(13.0) = 6.5\\text{ J}$$\n\nKinetic energy lost during impact:\n$$\\Delta T = T^- - T^+ = 12.5 - 6.5 = 6.0\\text{ J}$$\n\n**2. Theoretical Normal Energy Dissipation Check:**\nUsing the analytical formula for normal impact energy loss:\n$$\\Delta T_{\\text{normal}} = \\frac{1}{2}\\frac{1 - e^2}{G}(\\dot{h}^-)^2 = \\frac{1}{2}\\frac{1 - 0.50^2}{1.0}(-4.0)^2 = \\frac{1}{2}(0.75)(16.0) = 6.0\\text{ J} \\quad \\checkmark$$\nThe entire energy loss is accounted for by the normal restitution damping.\n\n**3. Tangential Velocity Conservation:**\nThe unit tangent vector perpendicular to $\\mathbf{n} = [0.6, 0.8]^T$ is:\n$$\\hat{\\mathbf{t}} = \\begin{bmatrix} -0.8 \\\\ 0.6 \\end{bmatrix}$$\nEvaluating pre-impact tangential velocity:\n$$v_t^- = \\hat{\\mathbf{t}}^T \\dot{\\mathbf{q}}^- = \\begin{bmatrix} -0.8 & 0.6 \\end{bmatrix} \\begin{bmatrix} 0 \\\\ -5.0 \\end{bmatrix} = 0 + (-3.0) = -3.0\\text{ m/s}$$\nEvaluating post-impact tangential velocity:\n$$v_t^+ = \\hat{\\mathbf{t}}^T \\dot{\\mathbf{q}}^+ = \\begin{bmatrix} -0.8 & 0.6 \\end{bmatrix} \\begin{bmatrix} 3.6 \\\\ -0.2 \\end{bmatrix} = -0.8(3.6) + 0.6(-0.2) = -2.88 - 0.12 = -3.0\\text{ m/s}$$\n\nBecause $v_t^+ = v_t^- = -3.0\\text{ m/s}$, the tangential momentum is identically conserved, confirming that no tangential friction impulse was exerted by the smooth dome surface."
+        }
+      ],
+      "finalAnswer": {
+        "summaryTitle": "Complete Verified Solution — Practice Exam E Problem 3 (Dome Collision)",
+        "items": [
+          {
+            "label": "(a) Contact Guard & Approach Velocity",
+            "math": "$$h(\\mathbf{q}) = \\sqrt{x^2 + y^2} - 5, \\qquad \\mathbf{J}_N = \\begin{bmatrix} 0.6 & 0.8 \\end{bmatrix}, \\qquad \\dot{h}^- = -4.0\\text{ m/s}$$"
+          },
+          {
+            "label": "(b) Block Impact Map Matrix Equation",
+            "math": "$$\\begin{bmatrix} 1 & 0 & -0.6 \\\\ 0 & 1 & -0.8 \\\\ 0.6 & 0.8 & 0 \\end{bmatrix} \\begin{bmatrix} \\dot{x}^+ \\\\ \\dot{y}^+ \\\\ \\Lambda_N \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ -5.0 \\\\ +2.0 \\end{bmatrix}$$"
+          },
+          {
+            "label": "(c) Normal Impulse & Post-Impact Velocity",
+            "math": "$$\\Lambda_N = 6.0\\text{ N}\\cdot\\text{s}, \\qquad \\dot{\\mathbf{q}}^+ = \\begin{bmatrix} +3.6 \\\\ -0.2 \\end{bmatrix}\\text{ m/s}, \\qquad \\dot{h}^+ = +2.0\\text{ m/s}$$"
+          },
+          {
+            "label": "(d) Graduate Part: Energy Loss & Tangential Conservation",
+            "math": "$$\\Delta T = 6.0\\text{ J} \\text{ (48\\% dissipated)}, \\qquad v_t^+ = v_t^- = -3.0\\text{ m/s} \\text{ (perfect slip)}$$"
+          }
+        ]
+      }
+    },
+    {
+      "id": "practice-e-4",
+      "code": "PRACTICE EXAM E • PROBLEM 4",
+      "shortTitle": "Tilted Plate on Axle (Inertia Tensor, Angular Momentum & Reactions)",
+      "title": "Tilted Square Plate on Axle (Inertia Tensor, Angular Momentum & Gyroscopic Reactions)",
+      "subtitle": "Coupled Inertia Tensor with Products of Inertia, Non-Collinear Angular Momentum H_G, Euler Equations & Bearing Reaction Torques",
+      "category": "Lagrangian Mechanics",
+      "badgeClass": "badge-indigo",
+      "difficulty": "Intermediate to Advanced",
+      "estimatedTime": "20 mins",
+      "estimatedMinutes": 20,
+      "matchedLectures": "Lec 14–16",
+      "lectureRefs": [
+        {
+          "code": "Lec 14",
+          "title": "3D Rigid Body Kinematics & Angular Velocity",
+          "time": "19:15"
+        },
+        {
+          "code": "Lec 15",
+          "title": "Inertia Tensor & Principal Axes",
+          "time": "26:40"
+        },
+        {
+          "code": "Lec 16",
+          "title": "Euler's Rotational Equations & Gyroscopic Torques",
+          "time": "22:50"
+        }
+      ],
+      "svgDiagram": "<svg viewBox=\"0 0 460 300\" width=\"100%\" height=\"230\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <marker id=\"arrow-rot\" viewBox=\"0 0 10 10\" refX=\"6\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">\n      <path d=\"M 0 1 L 10 5 L 0 9 z\" fill=\"#2563eb\" />\n    </marker>\n    <marker id=\"arrow-torque\" viewBox=\"0 0 10 10\" refX=\"6\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">\n      <path d=\"M 0 1 L 10 5 L 0 9 z\" fill=\"#d97706\" />\n    </marker>\n  </defs>\n\n  <!-- Spinning Axle along x-axis -->\n  <line x1=\"40\" y1=\"150\" x2=\"420\" y2=\"150\" stroke=\"#334155\" stroke-width=\"5\" stroke-linecap=\"round\" />\n  <text x=\"425\" y=\"154\" font-size=\"12\" font-weight=\"800\" fill=\"#334155\">x (Axle)</text>\n\n  <!-- Bearing A and Bearing B -->\n  <rect x=\"70\" y=\"135\" width=\"20\" height=\"30\" rx=\"3\" fill=\"#64748b\" stroke=\"#334155\" stroke-width=\"2\" />\n  <text x=\"68\" y=\"180\" font-size=\"10\" font-weight=\"800\" fill=\"#475569\">Bearing A</text>\n  <rect x=\"370\" y=\"135\" width=\"20\" height=\"30\" rx=\"3\" fill=\"#64748b\" stroke=\"#334155\" stroke-width=\"2\" />\n  <text x=\"368\" y=\"180\" font-size=\"10\" font-weight=\"800\" fill=\"#475569\">Bearing B</text>\n\n  <!-- Center of Mass G -->\n  <circle cx=\"230\" cy=\"150\" r=\"5\" fill=\"#dc2626\" />\n  <text x=\"236\" y=\"145\" font-size=\"11\" font-weight=\"800\" fill=\"#dc2626\">G</text>\n\n  <!-- Tilted Plate mounted on Axle -->\n  <polygon points=\"170,80 290,120 290,220 170,180\" fill=\"rgba(99, 102, 241, 0.35)\" stroke=\"#4f46e5\" stroke-width=\"2.5\" />\n  <text x=\"210\" y=\"110\" font-size=\"11\" font-weight=\"800\" fill=\"#4f46e5\">Plate (45° tilt)</text>\n\n  <!-- Angular velocity vector ω along x -->\n  <line x1=\"230\" y1=\"150\" x2=\"330\" y2=\"150\" stroke=\"#2563eb\" stroke-width=\"3\" marker-end=\"url(#arrow-rot)\" />\n  <text x=\"290\" y=\"140\" font-size=\"12\" font-weight=\"800\" fill=\"#2563eb\">ω = [2, 0, 0]ᵀ rad/s</text>\n\n  <!-- Dynamic Reaction Torque M_G along y (upward perpendicular to x) -->\n  <line x1=\"230\" y1=\"150\" x2=\"230\" y2=\"70\" stroke=\"#d97706\" stroke-width=\"3.5\" marker-end=\"url(#arrow-torque)\" />\n  <text x=\"238\" y=\"85\" font-size=\"12\" font-weight=\"800\" fill=\"#d97706\">M_G = [0, 4, 0]ᵀ N·m</text>\n\n  <!-- Coupling Card -->\n  <rect x=\"20\" y=\"20\" width=\"140\" height=\"45\" rx=\"5\" fill=\"#f8fafc\" stroke=\"#cbd5e1\" stroke-width=\"1\" />\n  <text x=\"28\" y=\"38\" font-size=\"10\" font-weight=\"800\" fill=\"#0f172a\">Off-Diagonal Coupling:</text>\n  <text x=\"28\" y=\"53\" font-size=\"10\" font-weight=\"700\" fill=\"#7c3aed\">I_xz = I_zx = -1 kg·m²</text>\n</svg>",
+      "prompt": "A square plate is mounted tilted at $45^\\circ$ on a rigid horizontal axle aligned with the $x$-axis. The axle rotates at constant angular speed $\\boldsymbol{\\omega} = [2, 0, 0]^T\\text{ rad/s}$. In the axle-fixed reference frame ${x, y, z}$ with origin at the center of mass $G$, the inertia tensor is $\\mathbf{I}_G = \\begin{bmatrix} 3 & 0 & -1 \\\\ 0 & 2 & 0 \\\\ -1 & 0 & 3 \\end{bmatrix}\\text{ kg}\\cdot\\text{m}^2$. (a) Calculate the rotational kinetic energy $T$; (b) determine the angular momentum vector $\\mathbf{H}_G$ about the center of mass and explain why $\\mathbf{H}_G$ is not parallel to $\\boldsymbol{\\omega}$; (c) apply Euler's rotational equations to find the dynamic torque $\\mathbf{M}_G$ that the bearings must exert on the axle; and (d) (Graduate Part) for bearings spaced $D = 1.0\\text{ m}$ symmetrically about $G$ at $x = \\pm 0.5\\text{ m}$, calculate the bearing dynamic reaction force couple $\\mathbf{F}_A, \\mathbf{F}_B$.",
+      "goalStatement": "Calculate rotational kinetic energy, compute angular momentum with off-diagonal products of inertia, and apply Euler's equations to determine dynamic bearing reaction moments and forces.",
+      "parameters": [
+        {
+          "symbol": "\\mathbf{I}_G",
+          "desc": "Rigid plate inertia tensor in axle frame ([3,0,-1; 0,2,0; -1,0,3] kg·m²)"
+        },
+        {
+          "symbol": "\\boldsymbol{\\omega}",
+          "desc": "Constant spin velocity vector along x-axle ([2, 0, 0]ᵀ rad/s)"
+        },
+        {
+          "symbol": "I_{xz}",
+          "desc": "Off-diagonal product of inertia causing dynamic unbalance (-1 kg·m²)"
+        },
+        {
+          "symbol": "D",
+          "desc": "Bearing separation span along x-axle (1.0 m, x = ±0.5 m)"
+        }
+      ],
+      "steps": [
+        {
+          "stepNumber": 1,
+          "badge": "STEP 1 OF 3 • ROTATIONAL KINETIC ENERGY",
+          "title": "Rotational Kinetic Energy Calculation",
+          "goal": "Compute the rotational kinetic energy $T = \\frac{1}{2}\\boldsymbol{\\omega}^T \\mathbf{I}_G \\boldsymbol{\\omega}$ for steady rotation about the $x$-axle.",
+          "intuition": "Even though the inertia tensor has off-diagonal coupling terms $I_{xz} = I_{zx} = -1$, the angular velocity vector only has a component along $x$: $\\boldsymbol{\\omega} = [2, 0, 0]^T$. The quadratic form selects only the top-left diagonal entry $I_{xx} = 3\\text{ kg}\\cdot\\text{m}^2$.",
+          "conceptLinks": [
+            "kinetic-potential-energy",
+            "generalized-coordinates"
+          ],
+          "hint1": "Evaluate the matrix-vector product $\\mathbf{I}_G \\boldsymbol{\\omega} = [3(2), 0, -1(2)]^T = [6, 0, -2]^T$.",
+          "hint2": "Take the dot product $\\frac{1}{2}\\boldsymbol{\\omega}^T [6, 0, -2]^T = \\frac{1}{2}(2)(6) = 6.0\\text{ J}$.",
+          "checkpoint": {
+            "question": "What is the rotational kinetic energy $T$ of the spinning plate?",
+            "options": [
+              "$T = 6.0\\text{ J}$",
+              "$T = 12.0\\text{ J}$",
+              "$T = 8.0\\text{ J}$",
+              "$T = 4.0\\text{ J}$"
+            ],
+            "correctIndex": 0,
+            "trapFeedback": [
+              "Correct! $T = \\frac{1}{2}\\boldsymbol{\\omega}^T\\mathbf{I}_G\\boldsymbol{\\omega} = \\frac{1}{2} I_{xx} \\omega_x^2 = \\frac{1}{2}(3)(2^2) = 6.0\\text{ J}$.",
+              "Did you forget the $\\frac{1}{2}$ factor in kinetic energy? $\\boldsymbol{\\omega}^T\\mathbf{I}_G\\boldsymbol{\\omega} = 12\\text{ J}$, so $T = 6\\text{ J}$.",
+              "This would include off-diagonal terms that vanish in the kinetic energy quadratic product.",
+              "Check $I_{xx} = 3\\text{ kg}\\cdot\\text{m}^2$: $\\frac{1}{2}(3)(4) = 6\\text{ J}$, not $4\\text{ J}$."
+            ]
+          },
+          "derivation": "### Step 1: Rotational Kinetic Energy\n\nThe rotational kinetic energy of a 3D rigid body rotating about its center of mass $G$ is given by the quadratic form:\n$$T = \\frac{1}{2}\\boldsymbol{\\omega}^T \\mathbf{I}_G \\boldsymbol{\\omega}$$\n\nGiven the inertia tensor and angular velocity:\n$$\\mathbf{I}_G = \\begin{bmatrix} 3 & 0 & -1 \\\\ 0 & 2 & 0 \\\\ -1 & 0 & 3 \\end{bmatrix}\\text{ kg}\\cdot\\text{m}^2, \\qquad \\boldsymbol{\\omega} = \\begin{bmatrix} 2 \\\\ 0 \\\\ 0 \\end{bmatrix}\\text{ rad/s}$$\n\nMultiplying $\\mathbf{I}_G \\boldsymbol{\\omega}$:\n$$\\mathbf{I}_G \\boldsymbol{\\omega} = \\begin{bmatrix} 3 & 0 & -1 \\\\ 0 & 2 & 0 \\\\ -1 & 0 & 3 \\end{bmatrix} \\begin{bmatrix} 2 \\\\ 0 \\\\ 0 \\end{bmatrix} = \\begin{bmatrix} 3(2) + 0 - 1(0) \\\\ 0 + 0 + 0 \\\\ -1(2) + 0 + 3(0) \\end{bmatrix} = \\begin{bmatrix} 6 \\\\ 0 \\\\ -2 \\end{bmatrix}\\text{ kg}\\cdot\\text{m}^2/\\text{s}$$\n\nNow computing the scalar product with $\\frac{1}{2}\\boldsymbol{\\omega}^T$:\n$$T = \\frac{1}{2} \\begin{bmatrix} 2 & 0 & 0 \\end{bmatrix} \\begin{bmatrix} 6 \\\\ 0 \\\\ -2 \\end{bmatrix} = \\frac{1}{2}(2 \\times 6 + 0 + 0) = 6.0\\text{ J}$$"
+        },
+        {
+          "stepNumber": 2,
+          "badge": "STEP 2 OF 3 • ANGULAR MOMENTUM & DYNAMIC UNBALANCE",
+          "title": "Angular Momentum Vector $\\mathbf{H}_G$ and Non-Collinearity",
+          "goal": "Determine the angular momentum vector $\\mathbf{H}_G = \\mathbf{I}_G \\boldsymbol{\\omega}$ and identify why $\\mathbf{H}_G$ does not point along the rotation axle.",
+          "intuition": "In elementary physics with planar rotation, angular momentum is always parallel to angular velocity: $L = I\\omega$. In 3D dynamics, $\\mathbf{H}_G$ is parallel to $\\boldsymbol{\\omega}$ ONLY IF the rotation axis is an eigenvector of the inertia tensor (a principal axis of inertia). Here, because the plate is tilted at $45^\\circ$, the product of inertia $I_{xz} = -1$ is nonzero, kicking the angular momentum vector into the $z$-direction: $\\mathbf{H}_G = [6, 0, -2]^T$.",
+          "conceptLinks": [
+            "kinetic-potential-energy",
+            "manipulator-equation"
+          ],
+          "hint1": "Compute $\\mathbf{H}_G = \\mathbf{I}_G \\boldsymbol{\\omega} = [3(2) - 0, 0, -1(2) + 0]^T = [6, 0, -2]^T$.",
+          "hint2": "Notice $\\mathbf{H}_G$ has a non-zero $z$-component ($-2\\text{ kg}\\cdot\\text{m}^2/\\text{s}$), whereas $\\boldsymbol{\\omega}$ has zero $z$-component.",
+          "checkpoint": {
+            "question": "What is the angular momentum vector $\\mathbf{H}_G$, and why is it not parallel to $\\boldsymbol{\\omega}$?",
+            "options": [
+              "$\\mathbf{H}_G = [6, 0, 0]^T$; it is parallel to $\\boldsymbol{\\omega}$ because the plate is symmetrical.",
+              "$\\mathbf{H}_G = [6, 0, -2]^T$; it is not parallel because the rotation axis $x$ is not a principal axis ($I_{xz} = -1 \\ne 0$).",
+              "$\\mathbf{H}_G = [6, 4, 0]^T$; it is not parallel due to Coriolis acceleration.",
+              "$\\mathbf{H}_G = [0, 0, -2]^T$; the axial momentum is zero."
+            ],
+            "correctIndex": 1,
+            "trapFeedback": [
+              "You neglected the off-diagonal product of inertia $I_{zx} = -1$, which generates a $z$-component $H_z = I_{zx}\\omega_x = -2$.",
+              "Correct! $\\mathbf{H}_G = [6, 0, -2]^T\\text{ kg}\\cdot\\text{m}^2/\\text{s}$. Because $I_{xz} \\ne 0$, the $x$-axis is not a principal axis of inertia, producing dynamic unbalance.",
+              "There is no $y$-component because $I_{yx} = 0$ and $\\omega_y = 0$.",
+              "The axial component is $H_x = I_{xx}\\omega_x = 3(2) = 6\\text{ kg}\\cdot\\text{m}^2/\\text{s}$, which is non-zero."
+            ]
+          },
+          "derivation": "### Step 2: Angular Momentum Vector and Dynamic Unbalance\n\nThe angular momentum about the center of mass $G$ in the rotating axle frame is:\n$$\\mathbf{H}_G = \\mathbf{I}_G \\boldsymbol{\\omega} = \\begin{bmatrix} I_{xx} & I_{xy} & I_{xz} \\\\ I_{yx} & I_{yy} & I_{yz} \\\\ I_{zx} & I_{zy} & I_{zz} \\end{bmatrix} \\begin{bmatrix} \\omega_x \\\\ 0 \\\\ 0 \\end{bmatrix} = \\begin{bmatrix} I_{xx}\\omega_x \\\\ I_{yx}\\omega_x \\\\ I_{zx}\\omega_x \\end{bmatrix}$$\n\nSubstituting values:\n$$\\mathbf{H}_G = \\begin{bmatrix} 3(2) \\\\ 0(2) \\\\ -1(2) \\end{bmatrix} = \\begin{bmatrix} 6 \\\\ 0 \\\\ -2 \\end{bmatrix}\\text{ kg}\\cdot\\text{m}^2/\\text{s}$$\n\n**Physical Significance of Non-Collinearity:**\n- The angular velocity vector points purely along the $x$-axis: $\\boldsymbol{\\omega} = 2\\hat{\\mathbf{i}}$.\n- The angular momentum vector has both an axial component and a transverse component: $\\mathbf{H}_G = 6\\hat{\\mathbf{i}} - 2\\hat{\\mathbf{k}}$.\n- Therefore, $\\mathbf{H}_G \\times \\boldsymbol{\\omega} \\ne \\mathbf{0}$, meaning $\\mathbf{H}_G$ and $\\boldsymbol{\\omega}$ are **not collinear**.\n- This occurs because the axle does not coincide with an eigenvector of $\\mathbf{I}_G$ ($I_{xz} = -1\\text{ kg}\\cdot\\text{m}^2 \\ne 0$). As the axle rotates, the transverse component $-2\\hat{\\mathbf{k}}$ rotates in inertial space, requiring a continuous dynamic torque to prevent the axle from wobbling."
+        },
+        {
+          "stepNumber": 3,
+          "badge": "STEP 3 OF 3 • EULER TORQUE & BEARING REACTIONS",
+          "title": "Dynamic Bearing Reaction Torque $\\mathbf{M}_G$ and Bearing Reaction Forces",
+          "goal": "Apply Euler's rotational equations $\\mathbf{M}_G = \\left(\\frac{d\\mathbf{H}_G}{dt}\\right)_I = \\dot{\\mathbf{H}}_G + \\boldsymbol{\\omega} \\times \\mathbf{H}_G$ to compute the reaction moment and determine the forces on bearings $A$ and $B$.",
+          "intuition": "Even though $\\boldsymbol{\\omega}$ is constant in time ($dot{\\boldsymbol{omega}} = 0$), the rotating frame's angular momentum vector rotates in space at rate $\\boldsymbol{\\omega}$. By the transport theorem, the rate of change of angular momentum is $\\boldsymbol{\\omega} \\times \\mathbf{H}_G$. This non-zero time derivative must be supplied by reaction forces from the support bearings.",
+          "conceptLinks": [
+            "generalized-forces",
+            "manipulator-equation"
+          ],
+          "hint1": "Compute the cross product: $\\boldsymbol{\\omega} \\times \\mathbf{H}_G = [2, 0, 0]^T \\times [6, 0, -2]^T$.",
+          "hint2": "$\\mathbf{i} \\times \\mathbf{i} = \\mathbf{0}$, and $\\mathbf{i} \\times (-\\mathbf{k}) = +\\mathbf{j}$. So $2\\hat{\\mathbf{i}} \\times (-2\\hat{\\mathbf{k}}) = +4\\hat{\\mathbf{j}}\\text{ N}\\cdot\\text{m}$.",
+          "checkpoint": {
+            "question": "What is the dynamic bearing torque $\\mathbf{M}_G$, and what dynamic reaction forces do bearings $A$ ($x = -0.5\\text{ m}$) and $B$ ($x = +0.5\\text{ m}$) exert?",
+            "options": [
+              "$\\mathbf{M}_G = [0, 4, 0]^T\\text{ N}\\cdot\\text{m}; \\quad \\mathbf{F}_A = [0, 0, +4]^T\\text{ N}, \\quad \\mathbf{F}_B = [0, 0, -4]^T\\text{ N}$",
+              "$\\mathbf{M}_G = [0, -4, 0]^T\\text{ N}\\cdot\\text{m}; \\quad \\mathbf{F}_A = [0, +2, 0]^T\\text{ N}, \\quad \\mathbf{F}_B = [0, -2, 0]^T\\text{ N}$",
+              "$\\mathbf{M}_G = [0, 0, 0]^T\\text{ N}\\cdot\\text{m}$; no bearing reactions are required at constant spin speed.",
+              "$\\mathbf{M}_G = [4, 0, 0]^T\\text{ N}\\cdot\\text{m}$; the motor must provide $4\\text{ N}\\cdot\\text{m}$ to maintain speed."
+            ],
+            "correctIndex": 0,
+            "trapFeedback": [
+              "Correct! $\\mathbf{M}_G = \\boldsymbol{\\omega} \\times \\mathbf{H}_G = [0, 4, 0]^T\\text{ N}\\cdot\\text{m} = 4\\hat{\\mathbf{j}}$. For bearings at $x = \\pm 0.5\\text{ m}$, the couple is $\\mathbf{r}_{B/A} \\times \\mathbf{F}_B = (1.0\\hat{\\mathbf{i}}) \\times (-4\\hat{\\mathbf{k}}) = +4\\hat{\\mathbf{j}}$, so $\\mathbf{F}_A = +4\\hat{\\mathbf{k}}\\text{ N}$ and $\\mathbf{F}_B = -4\\hat{\\mathbf{k}}\\text{ N}$.",
+              "Watch the cross product sign: $\\hat{\\mathbf{i}} \\times \\hat{\\mathbf{k}} = -\\hat{\\mathbf{j}}$, so $2\\hat{\\mathbf{i}} \\times (-2\\hat{\\mathbf{k}}) = -4(-\\hat{\\mathbf{j}}) = +4\\hat{\\mathbf{j}}$.",
+              "This is only true for statically and dynamically balanced rotors. For an unbalanced tilted plate, dynamic bearing reactions are strictly non-zero!",
+              "The torque is perpendicular to the axle ($hat{\\mathbf{j}}$ direction), meaning the motor torque along $x$ is zero (neglecting friction). The bearings must absorb this transverse bending moment."
+            ]
+          },
+          "derivation": "### Step 3: Euler's Rotational Equations and Bearing Reactions\n\n**1. Euler's Moment Equation:**\nIn the rotating axle frame ${x, y, z}$, the total rate of change of angular momentum seen from an inertial observer is given by the transport theorem:\n$$\\mathbf{M}_G = \\left(\\frac{d\\mathbf{H}_G}{dt}\\right)_{\\text{inertial}} = \\left(\\frac{d\\mathbf{H}_G}{dt}\\right)_{\\text{body}} + \\boldsymbol{\\omega} \\times \\mathbf{H}_G$$\n\nSince the plate spins at constant angular speed, $\\dot{\\boldsymbol{\\omega}} = \\mathbf{0}$, which implies $\\left(\\frac{d\\mathbf{H}_G}{dt}\\right)_{\\text{body}} = \\mathbf{I}_G \\dot{\\boldsymbol{\\omega}} = \\mathbf{0}$.\n\nEvaluating the gyroscopic cross product term:\n$$\\mathbf{M}_G = \\boldsymbol{\\omega} \\times \\mathbf{H}_G = \\begin{bmatrix} 2 \\\\ 0 \\\\ 0 \\end{bmatrix} \\times \\begin{bmatrix} 6 \\\\ 0 \\\\ -2 \\end{bmatrix}$$\n$$\\mathbf{M}_G = \\begin{vmatrix} \\hat{\\mathbf{i}} & \\hat{\\mathbf{j}} & \\hat{\\mathbf{k}} \\\\ 2 & 0 & 0 \\\\ 6 & 0 & -2 \\end{vmatrix} = \\hat{\\mathbf{i}}(0) - \\hat{\\mathbf{j}}(2(-2) - 0) + \\hat{\\mathbf{k}}(0) = -\\hat{\\mathbf{j}}(-4) = +4\\hat{\\mathbf{j}}\\text{ N}\\cdot\\text{m}$$\n\n$$\\mathbf{M}_G = \\begin{bmatrix} 0 \\\\ 4.0 \\\\ 0 \\end{bmatrix}\\text{ N}\\cdot\\text{m}$$\n\n**2. Dynamic Bearing Reaction Forces (Graduate Part):**\nLet bearing $A$ be located at $\\mathbf{r}_A = [-0.5, 0, 0]^T\\text{ m}$ and bearing $B$ at $\\mathbf{r}_B = [+0.5, 0, 0]^T\\text{ m}$ along the axle.\nBecause the center of mass $G$ is on the axle, the net translational acceleration is zero, so the net bearing force is zero:\n$$\\mathbf{F}_A + \\mathbf{F}_B = \\mathbf{0} \\implies \\mathbf{F}_A = -\\mathbf{F}_B$$\n\nThe bearing forces form a pure dynamic couple that provides the required moment $\\mathbf{M}_G$:\n$$\\mathbf{M}_G = \\mathbf{r}_A \\times \\mathbf{F}_A + \\mathbf{r}_B \\times \\mathbf{F}_B = (-0.5\\hat{\\mathbf{i}}) \\times (-\\mathbf{F}_B) + (0.5\\hat{\\mathbf{i}}) \\times \\mathbf{F}_B = (1.0\\hat{\\mathbf{i}}) \\times \\mathbf{F}_B$$\n$$4.0\\hat{\\mathbf{j}} = \\begin{vmatrix} \\hat{\\mathbf{i}} & \\hat{\\mathbf{j}} & \\hat{\\mathbf{k}} \\\\ 1.0 & 0 & 0 \\\\ F_{Bx} & F_{By} & F_{Bz} \\end{vmatrix} = -F_{Bz}\\hat{\\mathbf{j}} + F_{By}\\hat{\\mathbf{k}}$$\n\nEquating components:\n$$-F_{Bz} = 4.0 \\implies F_{Bz} = -4.0\\text{ N}$$\n$$F_{By} = 0$$\n\nThus, the dynamic bearing reaction forces are:\n$$\\mathbf{F}_B = \\begin{bmatrix} 0 \\\\ 0 \\\\ -4.0 \\end{bmatrix}\\text{ N}, \\qquad \\mathbf{F}_A = -\\mathbf{F}_B = \\begin{bmatrix} 0 \\\\ 0 \\\\ +4.0 \\end{bmatrix}\\text{ N}$$\n\nAs the axle spins at $\\omega = 2\\text{ rad/s}$, this force couple rotates with the axle, causing a cyclic rotating bending load of magnitude $4.0\\text{ N}$ on the bearing supports."
+        }
+      ],
+      "finalAnswer": {
+        "summaryTitle": "Complete Verified Solution — Practice Exam E Problem 4 (Tilted Plate & Bearing Reactions)",
+        "items": [
+          {
+            "label": "(a) Rotational Kinetic Energy",
+            "math": "$$T = \\frac{1}{2}\\boldsymbol{\\omega}^T \\mathbf{I}_G \\boldsymbol{\\omega} = \\frac{1}{2}I_{xx}\\omega_x^2 = \\frac{1}{2}(3)(2^2) = 6.0\\text{ J}$$"
+          },
+          {
+            "label": "(b) Angular Momentum Vector & Dynamic Unbalance",
+            "math": "$$\\mathbf{H}_G = \\mathbf{I}_G \\boldsymbol{\\omega} = \\begin{bmatrix} 6.0 \\\\ 0 \\\\ -2.0 \\end{bmatrix}\\text{ kg}\\cdot\\text{m}^2/\\text{s} \\quad (\\mathbf{H}_G \\nparallel \\boldsymbol{\\omega} \\text{ because } I_{xz} = -1 \\ne 0)$$"
+          },
+          {
+            "label": "(c) Dynamic Reaction Torque on Axle",
+            "math": "$$\\mathbf{M}_G = \\boldsymbol{\\omega} \\times \\mathbf{H}_G = \\begin{bmatrix} 0 \\\\ +4.0 \\\\ 0 \\end{bmatrix}\\text{ N}\\cdot\\text{m} = +4.0\\hat{\\mathbf{j}}\\text{ N}\\cdot\\text{m}$$"
+          },
+          {
+            "label": "(d) Graduate Part: Dynamic Bearing Reaction Couple ($D = 1.0\\text{ m}$)",
+            "math": "$$\\mathbf{F}_A = \\begin{bmatrix} 0 \\\\ 0 \\\\ +4.0 \\end{bmatrix}\\text{ N}, \\qquad \\mathbf{F}_B = \\begin{bmatrix} 0 \\\\ 0 \\\\ -4.0 \\end{bmatrix}\\text{ N}$$"
+          }
+        ]
+      }
     }
   ]
 };

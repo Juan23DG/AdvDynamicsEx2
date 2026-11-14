@@ -473,6 +473,7 @@ window.STUDIO = {
     if (!strip) return;
     const allProblems = window.EXAM2_DATA?.problems || [];
     const filtered = allProblems.filter(p => {
+      if (this.problemFilter === "practice-e" && !p.id.startsWith("practice-e-")) return false;
       if (this.problemFilter === "hw2" && !p.id.startsWith("hw2-")) return false;
       if (this.problemFilter === "new" && !p.id.startsWith("exam2-")) return false;
       if (this.problemFilter === "example" && !p.id.startsWith("example-")) return false;
