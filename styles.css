@@ -397,6 +397,32 @@ h1, h2, h3, h4 {
   flex: 1;
 }
 
+.problem-changer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.35);
+  transition: all 0.16s ease;
+}
+
+.problem-changer-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.45);
+}
+
+.prob-changer-tag {
+  background: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  padding: 0.1rem 0.42rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  display: inline-block;
+}
+
 .switcher-current-info {
   display: flex;
   align-items: center;

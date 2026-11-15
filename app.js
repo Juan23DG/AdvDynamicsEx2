@@ -220,7 +220,12 @@ window.STUDIO = {
     const aside = document.getElementById("problem-explorer-aside");
     const backdrop = document.getElementById("explorer-backdrop");
     const btn = document.getElementById("toggle-explorer-btn");
-    const totalCount = (window.EXAM2_DATA?.problems || []).length;
+    const allProblems = window.EXAM2_DATA?.problems || [];
+    const totalCount = allProblems.length || 20;
+    const curProb = this.getProblem();
+    const curIdx = allProblems.findIndex(p => p.id === curProb?.id) + 1;
+    const displayIdx = curIdx > 0 ? curIdx : 1;
+
     if (ws) {
       ws.classList.toggle("explorer-closed", !this.explorerOpen);
     }
@@ -232,8 +237,11 @@ window.STUDIO = {
     }
     if (btn) {
       btn.innerHTML = this.explorerOpen
-        ? `📂 Close Problem Bank (${totalCount})`
-        : `📂 Problem Bank (${totalCount})`;
+        ? `✕ Close Problem Menu`
+        : `⇄ Change Problem <span class="prob-changer-tag">${displayIdx}/${totalCount}</span> ▾`;
+      btn.title = this.explorerOpen
+        ? "Close the problem selection menu"
+        : `Currently on Problem ${displayIdx} of ${totalCount}. Click to change or select another problem.`;
     }
   },
 
@@ -538,12 +546,13 @@ window.STUDIO = {
 
     const allProblems = window.EXAM2_DATA?.problems || [];
     const probIndex = allProblems.findIndex(p => p.id === prob.id) + 1;
+    this.updateExplorerLayout();
 
     // Update Compact Top Problem Switcher Banner
     const bannerInfo = document.getElementById("active-problem-banner-info");
     if (bannerInfo) {
       bannerInfo.innerHTML = `
-        <span class="badge badge-indigo">Problem ${probIndex} of ${allProblems.length}</span>
+        <span class="badge badge-indigo" style="cursor:pointer;" onclick="window.STUDIO.toggleProblemExplorer()" title="Click to change or select another problem">Problem ${probIndex} of ${allProblems.length} ▾</span>
         <span class="badge badge-purple">${prob.code}</span>
         <span class="switcher-prob-title" title="${prob.title}">${prob.title}</span>
       `;
@@ -594,9 +603,14 @@ window.STUDIO = {
             <span class="badge badge-purple">${prob.category}</span>
             <span class="badge badge-amber">⏱️ ~${prob.estimatedMinutes}m</span>
           </div>
-          <button type="button" class="btn" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="window.STUDIO.resetCurrentProblem()" title="Reset your progress on this problem">
-            🔄 Reset Problem
-          </button>
+          <div style="display:flex; gap:0.35rem; align-items:center;">
+            <button type="button" class="btn btn-primary" style="padding:0.25rem 0.65rem; font-size:0.75rem; font-weight:700;" onclick="window.STUDIO.toggleProblemExplorer()" title="Open the full problem menu to choose another question">
+              ⇄ Change Problem
+            </button>
+            <button type="button" class="btn" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="window.STUDIO.resetCurrentProblem()" title="Reset your progress on this problem">
+              🔄 Reset Problem
+            </button>
+          </div>
         </div>
 
         <h2 class="problem-title">${prob.title}</h2>

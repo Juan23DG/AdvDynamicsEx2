@@ -270,11 +270,11 @@
       <div class="problem-switcher-toolbar" id="problem-switcher-toolbar">
         <div class="switcher-left">
           <button type="button"
-                  class="btn btn-primary"
+                  class="btn btn-primary problem-changer-btn"
                   id="toggle-explorer-btn"
                   onclick="window.STUDIO.toggleProblemExplorer()"
-                  title="Open the searchable Problem Bank drawer">
-            📂 Problem Bank (20)
+                  title="Click to change or select another problem (20 problems available)">
+            ⇄ Change Problem <span class="prob-changer-tag">1/20</span> ▾
           </button>
           <button type="button"
                   class="btn mobile-peek-btn"
@@ -451,14 +451,17 @@
   <div class="explorer-backdrop" id="explorer-backdrop" onclick="window.STUDIO.toggleProblemExplorer(false)"></div>
   <aside class="problem-explorer-aside" id="problem-explorer-aside" aria-label="Searchable Problem Bank">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-      <strong style="font-size:0.84rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--indigo);">
-        📚 Problem Bank Explorer
-      </strong>
+      <div>
+        <strong style="font-size:0.86rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--indigo); display:block;">
+          📚 Select a Problem to Solve
+        </strong>
+        <span style="font-size:0.72rem; color:var(--text-muted);">20 Practice &amp; Exam Questions Available</span>
+      </div>
       <button type="button"
               class="btn"
-              style="padding:0.2rem 0.55rem; font-size:0.75rem;"
+              style="padding:0.22rem 0.6rem; font-size:0.76rem; font-weight:700;"
               onclick="window.STUDIO.toggleProblemExplorer(false)"
-              title="Close Problem Bank Drawer">
+              title="Close Problem Menu">
         ✕ Close
       </button>
     </div>
